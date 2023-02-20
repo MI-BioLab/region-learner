@@ -33,8 +33,7 @@ class FocalLoss(nn.Module):
     """Focal loss with weighting factor α.
     
                 𝑖=𝑛
-                ⎲
-    FocalLoss = ⎳αᵢ(𝑖-𝑝ᵢ)ᵞlog(𝑝ᵢ)   
+    FocalLoss = ⅀ αᵢ(𝑖-𝑝ᵢ)ᵞlog(𝑝ᵢ)   
                 𝑖=1
     """
     

@@ -57,7 +57,7 @@ Inside the folder */config/* there are two files:
 ### config.cfg
 This file contains the default settings for different datasets. 
 
-In the config.cfg you can set the dataset to use, the input file of the ground truth of the poses, the output folder and whether save the pairs and the matrices. More than one input files can be listed whether the loop closure does not occur in a single sequence (as in the OpenLoris dataset).
+In the config.cfg you can set the dataset to use, the input file of the ground truth of the poses, the output folder and whether to save the pairs and the matrices. More than one input files can be listed whether the loop closure does not occur in a single sequence (as in the OpenLoris dataset).
 
 Six parameters must be set, according to the dataset used:
 - **distance_lower_bound** the lower bound for radius search in meters

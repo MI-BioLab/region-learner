@@ -5,8 +5,8 @@ Modified version of the RTAB-Map's ROS package. Please, refer to the original ve
 
 # Requirements
 In addition to the requirements in the original version, the following requirements must be satisfied:
-- [LibTorch](https://pytorch.org/cppdocs/installing.html);
-- [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) and [cuDNN](https://developer.nvidia.com/rdp/cudnn-archive) following this [guide](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html) (personally I followed the point 1.3.2 Debian Local Installation). Versions should be chosen according to your GPU (CUDA 11.6 and cuDNN 8.6.0 were used in the development of this package).
+- [LibTorch](https://pytorch.org/cppdocs/installing.html) (C++ PyTorch library);
+- [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) and [cuDNN](https://developer.nvidia.com/rdp/cudnn-archive) (personally I followed the point 1.3.2 Debian Local Installation of this [guide](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html)). Versions should be chosen according to your GPU (CUDA 11.6 and cuDNN 8.6.0 were used in the development of this package).
 
 # Modifications
 Compared to the original rtabmap_ros, only the CMakeLists.txt file has been modified to include libtorch and three launch files have been added:

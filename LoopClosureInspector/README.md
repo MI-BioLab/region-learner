@@ -57,7 +57,7 @@ Inside the folder */config/* there are two files:
 ### config.cfg
 This file contains the default settings for different datasets. 
 
-In the config.cfg you can set the dataset to use, the input file of the ground truth of the poses and the output folder.
+In the config.cfg you can set the dataset to use, the input file of the ground truth of the poses, the output folder and whether save the pairs and the matrices. More than one input files can be listed whether the loop closure does not occur in a single sequence (as in the OpenLoris dataset).
 
 Six parameters must be set, according to the dataset used:
 - **distance_lower_bound** the lower bound for radius search in meters
@@ -82,7 +82,7 @@ It outputs three files:
 - **pairs.txt** a set of tuple with the indexes of the poses that are loop closures
 
 ## Test
-To run the test, after the creation of the three outputs, the following command can be used
+To see the results, after the creation of the three outputs, the following command can be used
 ```
 python src/test.py --cfg /config/test.cfg
 ```

@@ -1,0 +1,47 @@
+<launch>
+
+
+<include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <arg name="rtabmapviz"                  value="false" /> 
+    <arg name="rviz"                        value="true" />
+    <arg name="queue_size"                  value="100" />
+    <arg name="use_sim_time"                value="true"/>
+    <arg name="frame_id"                    value="base_link"/>
+    <arg name="subscribe_scan"              value="true"/>
+    <arg name="odom_topic"                  value="/odom"/>
+    <arg name="scan_topic"                  value="/scan"/>
+    <arg name="compressed"                  value="true"/>
+    <arg name="approx_sync"                 value="true"/>
+    <arg name="rgbd_sync"                   value="true"/>
+    <arg name="visual_odometry"             value="true"/>
+    <arg name="rgb_topic"                   value="/camera/color/image_raw_throttle"/>
+    <arg name="depth_topic"                 value="/camera/aligned_depth_to_color/image_raw_throttle"/>
+    <arg name="camera_info_topic"           value="/camera/color/camera_info"/>
+    <arg name="depth_camera_info_topic"     value="/camera/aligned_depth_to_color/camera_info"/>
+    <arg name="rtabmap_args"                value="-d 
+                                                   --Reg/Strategy 0 
+                                                   --RGBD/NeighborLinkRefining false
+                                                   --RGBD/OptimizeMaxError 10 
+                                                   --Rtabmap/MemoryThr 50 
+                                                   --Rtabmap/LoopThr 0.08
+                                                   --Rtabmap/CreateIntermediateNodes false
+                                                   --Regions/ModelPath /home/matteo/models/best_campus_corridor_3_arc_serialized.pt 
+                                                   --Regions/InferenceMode true
+                                                   --Regions/UseXY true
+                                                   --Regions/ImagesSaveFolder /home/matteo/rtabmap_exploration/images/
+                                                   --Regions/DatasetSaveFile /home/matteo/rtabmap_exploration/dataset.txt
+                                                   --Regions/GraphSaveFile /home/matteo/rtabmap_exploration/graph.txt
+                                                   --Regions/CentroidsSaveFile /home/matteo/rtabmap_exploration/centroids.txt
+                                                   --Regions/RadiusUpperBound 3
+                                                   --Regions/DesiredAverageCardinality 60
+                                                   --Regions/MeshShapeFactor 1
+                                                   --Regions/KeepPrefixPath false
+                                                   --Regions/NameTotalLength 6"/>
+
+</include>
+
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_broadcaster" args="0 0 0 0 0 0 base_link camera_link" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 base_link  laser_frame" />
+
+</launch>

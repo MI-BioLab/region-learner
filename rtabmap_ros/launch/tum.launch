@@ -1,0 +1,21 @@
+<launch>
+
+<include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <arg name="rtabmapviz"                  value="false" /> 
+    <arg name="rviz"                        value="true" />
+    <arg name="queue_size"                  value="100" />
+    <arg name="use_sim_time"                value="true"/>
+    <arg name="frame_id"                    value="base_link"/>
+    <arg name="approx_sync"                 value="true"/>
+    <arg name="visual_odometry"             value="true"/>
+    <arg name="rgb_topic"                   value="/camera/rgb/image_color"/>
+    <arg name="depth_topic"                 value="/camera/depth/image"/>
+    <arg name="camera_info_topic"           value="/camera/rgb/camera_info"/>
+    <arg name="depth_camera_info_topic"     value="/camera/depth/camera_info"/>
+    <arg name="rtabmap_args"                value="--delete_db_on_start --Vis/MaxDepth 10 
+                                                    --Reg/Strategy 0 --RGBD/NeighborLinkRefining true
+                                                    --Kp/MaxFeatures 500 --Vis/MaxFeatures 1000"/>
+
+</include>
+
+</launch>

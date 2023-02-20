@@ -1,0 +1,45 @@
+<launch>
+
+<include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+    <arg name="rtabmapviz"                  value="false" /> 
+    <arg name="rviz"                        value="true" />
+    <arg name="queue_size"                  value="10" />
+    <arg name="use_sim_time"                value="true"/>
+    <arg name="frame_id"                    value="base_link"/>
+    <!-- <arg name="subscribe_scan"              value="true"/>
+    <arg name="scan_topic"                  value="/scan"/>
+    <arg name="odom_topic"                  value="/odom"/> -->
+    <arg name="approx_sync"                 value="true"/>
+    <arg name="rgb_topic"                   value="/color/image_raw"/>
+    <arg name="depth_topic"                 value="/aligned_depth_to_color/image_raw"/>
+    <arg name="camera_info_topic"           value="/color/camera_info"/>
+    <arg name="depth_camera_info_topic"     value="/aligned_depth_to_color/camera_info"/>
+    <arg name="visual_odometry"             value="true"/>
+    <arg name="args"                        value="-d --Reg/Strategy 0
+                                                    --Mem/IncrementalMemory true 
+                                                    --Mem/InitWMWithAllNodes false
+                                                    --Rtabmap/MemoryThr 0 
+                                                    --RGBD/OptimizeMaxError 10 
+                                                    --Rtabmap/LoopThr 0.08
+                                                    --Rtabmap/DetectionRate 1
+                                                    --Rtabmap/CreateIntermediateNodes false
+                                                    --Regions/ModelPath /home/matteo/models/best_openloris_market_1_serialized.pt 
+                                                    --Regions/InferenceMode false
+                                                    --Regions/UseXY true
+                                                    --Regions/ImagesSaveFolder /home/matteo/rtabmap_exploration/images/
+                                                    --Regions/DatasetSaveFile /home/matteo/rtabmap_exploration/dataset.txt
+                                                    --Regions/GraphSaveFile /home/matteo/rtabmap_exploration/graph.txt
+                                                    --Regions/CentroidsSaveFile /home/matteo/rtabmap_exploration/centroids.txt
+                                                    --Regions/RadiusUpperBound 5
+                                                    --Regions/DesiredAverageCardinality 30
+                                                    --Regions/MeshShapeFactor 1
+                                                    --Regions/KeepPrefixPath false
+                                                    --Regions/NameTotalLength 6"/>
+
+</include>
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_broadcaster" args="0.226483684909 -0.0511419403565 0.916 -0.496762299683 0.499879588713 -0.495106812694 0.508150428935 base_link d400_color" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.14350911105 -0.0964248846142 0.998048618989 0.00794676373317 0.011876376472 -0.7075455983 0.706339121032 base_link laser" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_odom_broadcaster" args="0 0 0 0 0 0 base_link base_odom" />
+
+</launch>

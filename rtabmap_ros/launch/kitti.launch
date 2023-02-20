@@ -1,0 +1,47 @@
+<launch>
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmapviz" value="false" />
+        <arg name="rviz" value="true" />
+        <arg name="queue_size" value="100" />
+        <arg name="use_sim_time" value="true" />
+        <arg name="output" value="screen" />
+        <arg name="approx_sync" value="true" />
+        <arg name="frame_id" value="base_link" />
+        <arg name="stereo" value="true" />
+        <arg name="left_image_topic" value="/kitti/camera_color_left/image_rect" />
+        <arg name="right_image_topic" value="/kitti/camera_color_right/image_rect" />
+        <arg name="left_camera_info_topic" value="/kitti/camera_color_left/camera_info" />
+        <arg name="right_camera_info_topic" value="/kitti/camera_color_right/camera_info" />
+        <arg name="use_odom_features" value="true" />
+        <arg name="args" value="-d --Grid/CellSize 0.3 
+        --Mem/IncrementalMemory true 
+        --Mem/InitWMWithAllNodes false
+        --Grid/ClusterRadius 1 
+        --RGBD/OptimizeMaxError 10 
+        --Rtabmap/MemoryThr 50 
+        --Rtabmap/TimeThr 0
+        --Rtabmap/LoopThr 0.05 
+        --Rtabmap/CreateIntermediateNodes false
+        --Regions/ModelPath /home/matteo/models/best_kitti_00_serialized.pt 
+        --Regions/InferenceMode false
+        --Regions/UseXY false
+        --Regions/KRegionsRetrieved 0
+        --Regions/MaxNodesRetrieved 0
+        --Regions/ImagesSaveFolder /home/matteo/rtabmap_exploration/images/
+        --Regions/DatasetSaveFile /home/matteo/rtabmap_exploration/dataset.txt
+        --Regions/GraphSaveFile /home/matteo/rtabmap_exploration/graph.txt
+        --Regions/CentroidsSaveFile /home/matteo/rtabmap_exploration/centroids.txt
+        --Regions/RadiusUpperBound 40
+        --Regions/DesiredAverageCardinality 30
+        --Regions/MeshShapeFactor 1
+        --Regions/KeepPrefixPath false
+        --Regions/NameTotalLength 6"
+        
+        />
+    </include>
+
+    <!--<node pkg="rtabmap_ros" type="map_optimizer" name="map_optimizer" output="screen" />-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_color_left_link_broadcaster"  args="0 0 0 0 0 0 base_link camera_color_left" />
+    <!--<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_color_left_link_broadcaster"  args="0 0 0 0 0 0 base_link camera_color_left" />-->
+
+</launch>

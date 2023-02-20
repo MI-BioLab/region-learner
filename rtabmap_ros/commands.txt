@@ -1,0 +1,20 @@
+export CMAKE_PREFIX_PATH=/home/matteo/catkin_ws/devel:/opt/ros/melodic:/home/matteo/libtorch
+
+
+<arg name="args" value="-d --Grid/CellSize 0.3 --Grid/ClusterRadius 1 --RGBD/OptimizeMaxError 10 --Rtabmap/MemoryThr 20" />
+
+<arg name="args" value="--Grid/CellSize 0.3 --Grid/ClusterRadius 1 --RGBD/OptimizeMaxError 10 --Rtabmap/MemoryThr 20 
+                                --Mem/IncrementalMemory false --Mem/InitWMWithAllNodes false" />
+
+
+OpenLoris
+
+rostopic pub /camera_info sensor_msgs/CameraInfo \
+"{header: {seq: 0, stamp: {secs: 0, nsecs: 0}, frame_id: 'd400_color'}, \
+  height: 480, width: 848, distortion_model: 'plumb_bob', \
+  D: [0, 0, 0, 0, 0], \
+  K: [6.1680273437500000e+02, 0.0, 4.3503417968750000e+02, 0.0, 6.1675103759765625e+02, 2.4290113830566406e+02, 0.0, 0.0, 1.0], \
+  R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0], \
+  P: [6.1680273437500000e+02, 0.0, 4.3503417968750000e+02, 0.0, 0.0, 6.1675103759765625e+02, 2.4290113830566406e+02, 0.0, 0.0, 0.0, 1.0, 0.0], \
+  binning_x: 0, binning_y: 0, \
+  roi: {x_offset: 0, y_offset: 0, height: 480, width: 848, do_rectify: false}}"

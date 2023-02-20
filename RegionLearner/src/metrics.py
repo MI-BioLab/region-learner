@@ -20,21 +20,21 @@ def exponential_moving_average(xt, prev_ema, alpha=0.9):
     return alpha * xt + (1-alpha) * prev_ema
 
 def top_N_accuracy(x, y, model, n=1, image_height=224, image_width=224, device="cuda", use_exponential_moving_average=False, alpha=0.9):
-    """Computes the top N accuracies.
+    """Computes the top N accuracy.
 
     Args:
         x (list(str)): the paths of the images.
         y (list(int)): the corresponding labels for the regions.
         model (torch.tensor): the deep neural network.
-        n (int, list(int), tuple(int), optional): the top N accuracies to compute (e.g. [1, 3] means top-1 and top-3 accuracies). Defaults to 1.
+        n (int, list(int), tuple(int), optional): the top N accuracy to compute (e.g. [1, 3] means top-1 and top-3 accuracy). Defaults to 1.
         image_height (int, optional): the height of the images. Defaults to 224.
         image_width (int, optional): the width of the images. Defaults to 224.
         device (str, optional): the device to use for the inference. Defaults to "cuda".
-        use_exponential_moving_average (bool, optional): whether use the exponential moving average to compute the top-N accuracies. Defaults to False.
+        use_exponential_moving_average (bool, optional): whether use the exponential moving average to compute the top-N accuracy. Defaults to False.
         alpha (float, optional): parameter used in the exponential moving average. Defaults to 0.9.
 
     Returns:
-        ndarray: the top-N accuracies.
+        ndarray: the top-N accuracy.
     """    
     if type(n) is list or type(n) is tuple:
         top_n_accuracy = np.zeros(len(n))

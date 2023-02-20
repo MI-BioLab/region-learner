@@ -5,96 +5,21 @@ import configparser
 
 from utils import read_txt
 
-def draw_centroids(x, y, regions, colors=[], 
-                    position=None, position_color="blue", position_dim=80, position_annotation="robot",
-                    x_test=None, y_test=None, test_colors="bisque"):
-    if len(regions) != len(x):
-        raise Exception(f"draw_centroids: regions and x must be the same length! Got {len(regions)} and {len(x)}")
-    if len(regions) != len(y):
-        raise Exception(f"draw_centroids: regions and y must be the same length! Got {len(regions)} and {len(y)}")
-    if len(x) != len(y):
-        raise Exception(f"draw_centroids: x and y must be the same length! Got {len(x)} and {len(y)}")
-    fig, ax = plt.subplots()
+def parse_parameters():
+    """Function to parse parameters.
     
-    if len(colors) == 0:
-        colors = "red"
-    elif len(colors) < len(regions):
-        diff = len(regions) - len(colors)
-        for i in range(diff):
-            colors.append(colors[-1])
-    ax.scatter(x, y, c = colors)
+    Each parameter has a default value, then it can be set from a config file or/and the command line.
 
-    if x_test and y_test:
-        if len(x_test) != len(y_test):
-            raise Exception(f"draw_centroids: x_test and y_test must be the same length! Got {len(x_test)} and {len(y_test)}")
-        if type(test_colors) is list:
-            if len(test_colors) > 0 and len(test_colors) < len(x_test):
-                diff = len(x_test) - len(test_colors)
-                for i in range(diff):
-                    test_colors.append(test_colors[-1])
-
-        ax.scatter(x_test, y_test, c = test_colors)
-        ax.plot(x_test, y_test, color = test_colors)
-
-    if position:
-        ax.scatter(position[0], position[1], c = position_color, s = position_dim)
-        ax.annotate(position_annotation, (position[0], position[1]))
-
-    ax.plot(x, y, color = "black")
-
-    for i in regions:
-        ax.annotate(str(i), (x[i], y[i]))
-        
-    plt.show()
-
-def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotate_regions=False):
-    total_colors = []
-    fig, ax = plt.subplots()
-    if type(colors) is not list:
-        raise Exception(f"draw_regions: colors must be a list! Got {type(colors)}")
-    if len(regions) != len(x):
-        raise Exception(f"draw_regions: regions and x must be the same length! Got {len(regions)} and {len(x)}")
-    if len(regions) != len(y):
-        raise Exception(f"draw_regions: regions and y must be the same length! Got {len(regions)} and {len(y)}")
-    if len(x) != len(y):
-        raise Exception(f"draw_regions: x and y must be the same length! Got {len(x)} and {len(y)}")
-    if len(colors) > 0 and len(colors) != len(x) and len(colors) != total_regions:
-        raise Exception(f"draw_regions: colors, x and y must be the same length, or colors length must be equal to total_regions! Got len(x)={len(x)}, total_regions={total_regions}, and len(colors)={len(colors)}")
-    
-    if len(colors) == total_regions:
-        for j in regions:
-            total_colors.append(colors[j])
-    elif len(colors) == 0:
-        for i in range(total_regions):
-            color = np.random.uniform(0.4, 1.0, 3,)
-            print(color)
-            for j in regions:
-                if j == i:
-                    total_colors.append(color)
-    elif len(colors) == regions:
-        total_colors = colors
-
-    if annotate_regions:
-        for i in range(total_regions):
-            for j in range(len(regions)):
-                if i == regions[j]:
-                    ax.annotate(str(i), (x[j], y[j]))
-                    break
-
-    ax.scatter(x, y, c = total_colors, s = circle_dim)    
-    plt.show()
-
-if __name__ == "__main__":
+    Returns:
+        list: the list of parameters parsed.
+    """   
     config_path = "config/config.cfg"
 
-    #dataset
     path_to_dataset = "datasets/KITTI/09/train/"
     images_folder = "images/"
     dataset_file = "dataset.txt"
     centroids_file = "centroids.txt"
     graph_file = "graph.txt"
-
-    #visualizer
     position_color="blue"
     position_dim=80
     position_annotation="robot"
@@ -151,6 +76,130 @@ if __name__ == "__main__":
     test_colors = args.test_colors if args.test_colors else test_colors
     circle_dim = args.circle_dim if args.circle_dim else circle_dim
     annotate_regions = args.annotate_regions if args.annotate_regions else annotate_regions
+    
+    return path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, position_color, position_dim, \
+        position_annotation, test_colors, circle_dim, annotate_regions
+
+def draw_centroids(x, y, regions, colors=[], 
+                    position=None, position_color="blue", position_dim=80, position_annotation="robot",
+                    x_test=None, y_test=None, test_colors="bisque"):
+    """Function to draw the centroids.
+
+    Args:
+        x (ndarray): the x coordinates of the centroids of the training sequence.
+        y (ndarray): the y coordinates of the centroids of the training sequence.
+        regions (ndarray): the corresponding regions.
+        colors (list, optional): colors to use to draw the centroids. Defaults to [].
+        position (tuple or list, optional): the position of the robot. Defaults to None.
+        position_color (str, optional): the color for the position. Defaults to "blue".
+        position_dim (int, optional): the radius of the circle representing the position. Defaults to 80.
+        position_annotation (str, optional): the annotation to be written next to the position. Defaults to "robot".
+        x_test (ndarray, optional): the x coordinates of the centroids of the test sequence. Defaults to None.
+        y_test (ndarray, optional): the y coordinates of the centroids of the test sequence. Defaults to None.
+        test_colors (str, optional): the color to use to draw the test sequence. Defaults to "bisque".
+
+    Raises:
+        Exception: regions and x must be the same length.
+        Exception: regions and y must be the same length.
+        Exception: x and y must be the same length.
+        Exception: x_test and y_test must be the same length.
+    """
+    if len(regions) != len(x):
+        raise Exception(f"draw_centroids: regions and x must be the same length! Got {len(regions)} and {len(x)}")
+    if len(regions) != len(y):
+        raise Exception(f"draw_centroids: regions and y must be the same length! Got {len(regions)} and {len(y)}")
+    if len(x) != len(y):
+        raise Exception(f"draw_centroids: x and y must be the same length! Got {len(x)} and {len(y)}")
+    fig, ax = plt.subplots()
+    
+    if len(colors) == 0:
+        colors = "red"
+    elif len(colors) < len(regions):
+        diff = len(regions) - len(colors)
+        for i in range(diff):
+            colors.append(colors[-1])
+    ax.scatter(x, y, c = colors)
+
+    if x_test and y_test:
+        if len(x_test) != len(y_test):
+            raise Exception(f"draw_centroids: x_test and y_test must be the same length! Got {len(x_test)} and {len(y_test)}")
+        if type(test_colors) is list:
+            if len(test_colors) > 0 and len(test_colors) < len(x_test):
+                diff = len(x_test) - len(test_colors)
+                for i in range(diff):
+                    test_colors.append(test_colors[-1])
+
+        ax.scatter(x_test, y_test, c = test_colors)
+        ax.plot(x_test, y_test, color = test_colors)
+
+    if position:
+        ax.scatter(position[0], position[1], c = position_color, s = position_dim)
+        ax.annotate(position_annotation, (position[0], position[1]))
+
+    ax.plot(x, y, color = "black")
+
+    for i in regions:
+        ax.annotate(str(i), (x[i], y[i]))
+        
+    plt.show()
+
+def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotate_regions=False):
+    """Function to draw the graph colored with a different color for of each region.
+
+    Args:
+       x (ndarray): the x coordinates of the nodes of the training sequence.
+        y (ndarray): the y coordinates of the nodes of the training sequence.
+        regions (ndarray): the corresponding regions.
+        total_regions (int): the total number of regions.
+        colors (list, optional): colors to use to draw the nodes. Defaults to [].
+        circle_dim (int, optional): the radius of the circle representing the nodes. Defaults to 10.
+        annotate_regions (bool, optional): whether annotate the regions. Defaults to False.
+
+    Raises:
+        Exception: colors must be a list.
+        Exception: regions and x must be the same length.
+        Exception: regions and y must be the same length.
+        Exception: x and y must be the same length.
+        Exception: colors, x and y must be the same length, or colors length must be equal to total_regions.
+    """    
+    total_colors = []
+    fig, ax = plt.subplots()
+    if type(colors) is not list:
+        raise Exception(f"draw_regions: colors must be a list! Got {type(colors)}")
+    if len(regions) != len(x):
+        raise Exception(f"draw_regions: regions and x must be the same length! Got {len(regions)} and {len(x)}")
+    if len(regions) != len(y):
+        raise Exception(f"draw_regions: regions and y must be the same length! Got {len(regions)} and {len(y)}")
+    if len(x) != len(y):
+        raise Exception(f"draw_regions: x and y must be the same length! Got {len(x)} and {len(y)}")
+    if len(colors) > 0 and len(colors) != len(x) and len(colors) != total_regions:
+        raise Exception(f"draw_regions: colors, x and y must be the same length, or colors length must be equal to total_regions! Got len(x)={len(x)}, total_regions={total_regions}, and len(colors)={len(colors)}")
+    
+    if len(colors) == total_regions:
+        for j in regions:
+            total_colors.append(colors[j])
+    elif len(colors) == 0:
+        for i in range(total_regions):
+            color = np.random.uniform(0.4, 1.0, 3)
+            for j in regions:
+                if j == i:
+                    total_colors.append(color)
+    elif len(colors) == regions:
+        total_colors = colors
+
+    if annotate_regions:
+        for i in range(total_regions):
+            for j in range(len(regions)):
+                if i == regions[j]:
+                    ax.annotate(str(i), (x[j], y[j]))
+                    break
+
+    ax.scatter(x, y, c = total_colors, s = circle_dim)    
+    plt.show()
+
+if __name__ == "__main__":
+    path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, position_color, position_dim, \
+    position_annotation, test_colors, circle_dim, annotate_regions = parse_parameters()
 
     images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     centroids = read_txt(path_to_dataset + centroids_file, "\t")

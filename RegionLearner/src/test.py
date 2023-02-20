@@ -10,7 +10,7 @@ from utils import read_txt
 from metrics import top_N_accuracy     
 
 def parse_parameters():
-    """_Function to parse parameters.
+    """Function to parse parameters.
     
     Each parameter has a default value, then it can be set from a config file or/and the command line.
 
@@ -152,8 +152,8 @@ if __name__ == '__main__':
     
     model.eval()
  
-    top_N_accuracies = top_N_accuracy(x, y, model, [1, 3], image_height, image_width, device, use_exponential_moving_average, alpha)
-    print(top_N_accuracies)
+    accuracy = top_N_accuracy(x, y, model, [1, 3], image_height, image_width, device, use_exponential_moving_average, alpha)
+    print(accuracy)
 
 
     

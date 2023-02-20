@@ -1,0 +1,6 @@
+configparser
+grispy
+numpy
+pandas
+matplotlib
+scipy

@@ -11,35 +11,21 @@ from model import get_model
 from loss import FocalLoss, compute_weights
 from utils import read_txt
 
-def train(train_dataloader, model, loss_fn, optimizer):
-    train_loss = 0.0
-    model.train()
-    for batch, X in enumerate(train_dataloader):
-        x, y = X
-        output = model(x)
-        loss = loss_fn(output, y)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        train_loss += loss.item()
+def parse_parameters():
+    """Function to parse parameters.
+    
+    Each parameter has a default value, then it can be set from a config file or/and the command line.
 
-    train_loss /= (batch + 1)
-    return train_loss
-
-if __name__ == "__main__":
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using {device} device")
-
+    Returns:
+        list: the list of parameters parsed.
+    """    
     config_path = "config/config.cfg"
 
-    #dataset
     path_to_dataset = "datasets/KITTI/09/train/"
     images_folder = "images/"
     dataset_file = "dataset.txt"
     centroids_file = "centroids.txt"
     graph_file = "graph.txt"
-
-    #nn
     batch_size = 128
     image_width = 224
     image_height = 224
@@ -61,14 +47,6 @@ if __name__ == "__main__":
     save_model_serialized = True
     serialize_on_gpu = False
     save_model_path_serialized = "datasets/KITTI/09/kitti_09_serialized.pt"
-
-    #visualizer
-    position_color="blue"
-    position_dim=80
-    position_annotation="robot"
-    test_colors="bisque"
-    circle_dim=10
-    annotate_regions=False
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--config-path', type=str)
@@ -98,12 +76,6 @@ if __name__ == "__main__":
     parser.add_argument('--save-model-serialized', type=int)
     parser.add_argument('--serialize-on-gpu', type=int)
     parser.add_argument('--save-model-path-serialized', type=str)
-    parser.add_argument('--position-color', type=str)
-    parser.add_argument('--position-dim', type=int)
-    parser.add_argument('--position-annotation', type=str)
-    parser.add_argument('--test-colors', type=str)
-    parser.add_argument('--circle-dim', type=int)
-    parser.add_argument('--annotate-regions', type=int)
 
     args = parser.parse_args()
 
@@ -111,7 +83,8 @@ if __name__ == "__main__":
 
     config = configparser.ConfigParser()
     config.read(config_path)
-
+    
+    # parsing from the configuration file
     if "dataset" in config:
         path_to_dataset = config["dataset"]["path_to_dataset"] if "path_to_dataset" in config["dataset"] else path_to_dataset
         images_folder = config["dataset"]["images_folder"] if "images_folder" in config["dataset"] else images_folder
@@ -136,27 +109,18 @@ if __name__ == "__main__":
         random_perspective_distortion = float(config["nn"]["random_perspective_distortion"]) if "random_perspective_distortion" in config["nn"] else random_perspective_distortion
         random_perspective_p = float(config["nn"]["random_perspective_p"]) if "random_perspective_p" in config["nn"] else random_perspective_p
         random_rotation_degrees = eval(config["nn"]["random_rotation_degrees"]) if "random_rotation_degrees" in config["nn"] else random_rotation_degrees
-        
         save_best_model = config["nn"]["save_best_model"] == "true" if "save_best_model" in config["nn"] else save_best_model
         save_model_path = config["nn"]["save_model_path"] if "save_model_path" in config["nn"] else save_model_path
         save_model_serialized = config["nn"]["save_model_serialized"] == "true" if "save_model_serialized" in config["nn"] else save_model_serialized
         serialize_on_gpu = config["nn"]["serialize_on_gpu"] == "true" if "serialize_on_gpu" in config["nn"] else serialize_on_gpu
         save_model_path_serialized = config["nn"]["save_model_path_serialized"] if "save_model_path_serialized" in config["nn"] else save_model_path_serialized
 
-    if "visualizer" in config:
-        position_color = config["visualizer"]["position_color"] if "position_color" in config["visualizer"] else position_color
-        position_dim = int(config["visualizer"]["position_dim"]) if "position_dim" in config["visualizer"] else position_dim
-        position_annotation = config["visualizer"]["position_annotation"] if "position_annotation" in config["visualizer"] else position_annotation
-        test_colors = config["visualizer"]["test_colors"] if "test_colors" in config["visualizer"] else test_colors
-        circle_dim = int(config["visualizer"]["circle_dim"]) if "circle_dim" in config["visualizer"] else circle_dim 
-        annotate_regions = config["visualizer"]["annotate_regions"] == "true" if "annotate_regions" in config["visualizer"] else annotate_regions
-
+    # parsing from the command line
     path_to_dataset = args.path_to_dataset if args.path_to_dataset else path_to_dataset
     images_folder = args.images_folder if args.images_folder else images_folder
     dataset_file = args.dataset_file if args.dataset_file else dataset_file
     centroids_file = args.centroids_file if args.centroids_file else centroids_file
     graph_file = args.graph_file if args.graph_file else graph_file
-
     batch_size = args.batch_size if args.batch_size else batch_size
     image_width = args.image_width if args.image_width else image_width
     image_height = args.image_height if args.image_height else image_height
@@ -178,14 +142,46 @@ if __name__ == "__main__":
     save_model_serialized = args.save_model_serialized if args.save_model_serialized else save_model_serialized
     serialize_on_gpu = args.serialize_on_gpu if args.serialize_on_gpu else serialize_on_gpu
     save_model_path_serialized = args.save_model_path_serialized if args.save_model_path_serialized else save_model_path_serialized
+    
+    return path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, batch_size, image_width, image_height, \
+            beta, gamma, loss_reduction, epochs, learning_rate, use_augmentation, brightness, contrast, saturation, hue, \
+            random_perspective_distortion, random_perspective_p, random_rotation_degrees, save_best_model, save_model_path, \
+            save_model_serialized,  serialize_on_gpu, save_model_path_serialized
 
-    position_color = args.position_color if args.position_color else position_color
-    position_dim = args.position_dim if args.position_dim else position_dim
-    position_annotation = args.position_annotation if args.position_annotation else position_annotation
-    test_colors = args.test_colors if args.test_colors else test_colors
-    circle_dim = args.circle_dim if args.circle_dim else circle_dim
-    annotate_regions = args.annotate_regions if args.annotate_regions else annotate_regions
+def train(train_dataloader, model, loss_fn, optimizer):
+    """Train cycle.
 
+    Args:
+        train_dataloader (torch.utils.data.Dataloader): the dataloader.
+        model (torch.tensor): ther deep neural network.
+        loss_fn (function): the loss function.
+        optimizer (torch.nn.optim): the optimizer used for training.
+
+    Returns:
+        torch.tensor: the training loss.
+    """    
+    train_loss = 0.0
+    model.train()
+    for batch, X in enumerate(train_dataloader):
+        x, y = X
+        output = model(x)
+        loss = loss_fn(output, y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+
+    train_loss /= (batch + 1)
+    return train_loss
+
+if __name__ == "__main__":
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using {device} device")
+
+    path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, batch_size, image_width, image_height, \
+    beta, gamma, loss_reduction, epochs, learning_rate, use_augmentation, brightness, contrast, saturation, hue, \
+    random_perspective_distortion, random_perspective_p, random_rotation_degrees, save_best_model, save_model_path, \
+    save_model_serialized,  serialize_on_gpu, save_model_path_serialized = parse_parameters()
 
     images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     centroids = read_txt(path_to_dataset + centroids_file, "\t")
@@ -204,7 +200,6 @@ if __name__ == "__main__":
 
     model = get_model(total_regions)
     model.to(device)
-
     
     lr = learning_rate
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
@@ -214,12 +209,16 @@ if __name__ == "__main__":
     writer = SummaryWriter()
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
+        
+        # learning rate policy: if the learning rate is not decreased after 5 epochs, then it is reduced of a factor of 3 (i.e. multiplied for 0.3333).
         if(n_epoch_since_last_best_loss == 5):
             n_epoch_since_last_best_loss = 0
             for g in optimizer.param_groups:
                 lr *= 0.3333
                 g['lr'] = lr
                 print(f"Learning rate decreased. New learning rate: {lr:.6f}")  
+        
+        # if the learning rate is less than 1⁻⁵ the training is interrupted.
         if lr < 1e-5:
             break
 
@@ -231,8 +230,7 @@ if __name__ == "__main__":
                 if save_best_model:
                     torch.save(model.state_dict(), save_model_path)
                 n_epoch_since_last_best_loss = 0
-        
-        
+    
         else:
             n_epoch_since_last_best_loss += 1
         
@@ -243,6 +241,7 @@ if __name__ == "__main__":
         writer.add_scalar('Learning Rate', lr, t)
     print("Done!") 
     
+    # save the trained model fot the inference
     if save_model_serialized:
         model_name = save_model_path_serialized.split("/")[-1].split(".")[0]
         model_path_serialized = os.path.join(*save_model_path_serialized.split("/")[:-1]) 

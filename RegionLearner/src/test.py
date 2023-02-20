@@ -7,15 +7,18 @@ from glob import glob
 
 from model import get_model
 from utils import read_txt
-from metrics import top_N_accuracy           
-        
-if __name__ == '__main__':
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Using {device} device")
+from metrics import top_N_accuracy     
+
+def parse_parameters():
+    """_Function to parse parameters.
     
+    Each parameter has a default value, then it can be set from a config file or/and the command line.
+
+    Returns:
+        list: the list of parameters parsed.
+    """    
     config_path = "config/config.cfg"
 
-    #dataset
     path_to_dataset = "datasets/KITTI/09/train/"
     images_folder = "images/"
     dataset_file = "dataset.txt"
@@ -32,6 +35,9 @@ if __name__ == '__main__':
     train_correspondences_file="corridor2_train_correspondences.txt"
     test_on_training_set = False
     use_best_model = True
+    top_accuracy = [1, 3]
+    use_exponential_moving_average = True
+    alpha = 0.9
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--config-path', type=str)
@@ -49,6 +55,9 @@ if __name__ == '__main__':
     parser.add_argument('--train-correspondences-file', type=str)
     parser.add_argument('--test-on-training-set', type=int)
     parser.add_argument('--use-best-model', type=int)
+    parser.add_argument('--top-accuracy', type=list)
+    parser.add_argument('--use-exponential-moving-average', type=int)
+    parser.add_argument('--alpha', type=float)
 
     args = parser.parse_args()
 
@@ -77,6 +86,9 @@ if __name__ == '__main__':
             path_to_test = config["test"]["path_to_test"] if "path_to_test" in config["test"] else path_to_test
             train_correspondences_file = config["test"]["train_correspondences_file"] if "train_correspondences_file" in config["test"] else train_correspondences_file
         use_best_model = config["test"]["use_best_model"] == "true" if "use_best_model" in config["test"] else use_best_model
+        top_accuracy = config["test"]["top_accuracy"].split(",") if "top_accuracy" in config["test"] else top_accuracy
+        use_exponential_moving_average = config["test"]["use_exponential_moving_average"] == "true" if "use_exponential_moving_average" in config["test"] else use_exponential_moving_average
+        alpha = config["test"]["alpha"] == "true" if "alpha" in config["test"] else alpha
 
     path_to_dataset = args.path_to_dataset if args.path_to_dataset else path_to_dataset
     images_folder = args.images_folder if args.images_folder else images_folder
@@ -94,14 +106,26 @@ if __name__ == '__main__':
     train_correspondences_file = args.train_correspondences_file if args.train_correspondences_file else train_correspondences_file
     test_on_training_set = args.test_on_training_set if args.test_on_training_set else test_on_training_set
     use_best_model = args.use_best_model if args.use_best_model else use_best_model
+    top_accuracy = args.top_accuracy if args.top_accuracy else top_accuracy
+    use_exponential_moving_average = args.use_exponential_moving_average if args.use_exponential_moving_average else use_exponential_moving_average
+    alpha = args.alpha if args.alpha else alpha   
+    
+    return path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, model_path, model_path_serialized, \
+        image_width, image_height, path_to_test_dataset, path_to_test, train_correspondences_file, test_on_training_set, \
+        use_best_model ,top_accuracy, use_exponential_moving_average, alpha   
+        
+if __name__ == '__main__':
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using {device} device")
+    
+    path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, model_path, model_path_serialized, \
+    image_width, image_height, path_to_test_dataset, path_to_test, train_correspondences_file, test_on_training_set, \
+    use_best_model ,top_accuracy, use_exponential_moving_average, alpha = parse_parameters()
 
     images_paths = [os.path.normpath(path) for path in glob(path_to_test_dataset + "*")]
-        
     train_images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     train_centroids = read_txt(path_to_dataset + centroids_file, "\t")
     
-    
-
     if test_on_training_set:
         x = train_images_regions[:, 0]
         y = train_images_regions[:, 1].astype(int)
@@ -118,8 +142,6 @@ if __name__ == '__main__':
                 y.append(train_correspondences[i][1])
                 x.append(images_paths[j])  
         
-    #graph = read_txt(path_to_dataset + graph_file, "\t")
-
     total_regions = len(train_centroids)
     
     if use_best_model:
@@ -129,10 +151,9 @@ if __name__ == '__main__':
     model = torch.jit.load(model_path_serialized).to(device)
     
     model.eval()
-
-    errors = []    
-    top_1_accuracy, top_3_accuracy = top_N_accuracy(x, y, model, [1, 3])
-    print(top_1_accuracy, top_3_accuracy)
+ 
+    top_N_accuracies = top_N_accuracy(x, y, model, [1, 3], image_height, image_width, device, use_exponential_moving_average, alpha)
+    print(top_N_accuracies)
 
 
     

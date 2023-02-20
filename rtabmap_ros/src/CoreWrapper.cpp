@@ -321,12 +321,7 @@ namespace rtabmap_ros
 		char *rosHomePath = getenv("ROS_HOME");
 		std::string workingDir = rosHomePath ? rosHomePath : UDirectory::homeDir() + "/.ros";
 		uInsert(allParameters, ParametersPair(Parameters::kRtabmapWorkingDirectory(), workingDir)); // change default to ~/.ros
-
-		if (configPath_.empty())
-		{
-			configPath_ = "/home/matteo/.rtabmap/rtabmap.ini";
-		}
-
+		
 		// load parameters
 		loadParameters(configPath_, parameters_);
 		for (ParametersMap::iterator iter = parameters_.begin(); iter != parameters_.end();)

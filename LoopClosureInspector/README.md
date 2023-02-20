@@ -1,4 +1,4 @@
-# loop-closure-inspector
+# LoopClosureInspector
 
 Package to automatically detect loop closures or correspondences between poses in one or more path, given a ground truth of the poses.
 

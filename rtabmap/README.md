@@ -1,80 +1,37 @@
 rtabmap
 =======
 
-[![RTAB-Map Logo](https://raw.githubusercontent.com/introlab/rtabmap/master/guilib/src/images/RTAB-Map100.png)](http://introlab.github.io/rtabmap)
+Modified version of rtabmap. Please, refer to the original [rtabmap](https://github.com/introlab/rtabmap) for the installation.
 
-[![Release][release-image]][releases]
-[![License][license-image]][license]
+# Requirements
+In addition to the requirements in the original version, the following requirements must be satisfied:
+- [LibTorch](https://pytorch.org/cppdocs/installing.html) (C++ PyTorch library);
+- [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) and [cuDNN](https://developer.nvidia.com/rdp/cudnn-archive) (personally I followed the point 1.3.2 Debian Local Installation of this [guide](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html)). Versions should be chosen according to your GPU (CUDA 11.6 and cuDNN 8.6.0 were used in the development of this package).
 
-[release-image]: https://img.shields.io/badge/release-0.20.16-green.svg?style=flat
-[releases]: https://github.com/introlab/rtabmap/releases
-
-[license-image]: https://img.shields.io/badge/license-BSD-green.svg?style=flat
-[license]: https://github.com/introlab/rtabmap/blob/master/LICENSE
-
-RTAB-Map library and standalone application.
-
- * For more information (e.g., papers, major updates), visit [RTAB-Map's home page](http://introlab.github.io/rtabmap).
- * For installation instructions and examples, visit [RTAB-Map's wiki](https://github.com/introlab/rtabmap/wiki).
-
-To use RTAB-Map under ROS, visit the [rtabmap](http://wiki.ros.org/rtabmap) page on the ROS wiki.
-
-### Acknowledgements
-This project is supported by [IntRoLab - Intelligent / Interactive / Integrated / Interdisciplinary Robot Lab](https://introlab.3it.usherbrooke.ca/), Sherbrooke, Québec, Canada.
-
-<a href="https://introlab.3it.usherbrooke.ca/">
-<img src="https://github.com/introlab/16SoundsUSB/blob/master/images/IntRoLab.png" alt="IntRoLab" height="100">
-</a>
-
-#### CI Latest
-
-  <table>
-    <tbody>
-        <tr>
-           <td>Linux</td>
-           <td><a href="https://github.com/introlab/rtabmap/actions/workflows/cmake.yml"><img src="https://github.com/introlab/rtabmap/actions/workflows/cmake.yml/badge.svg" alt="Build Status"/> <br> <a href="https://github.com/introlab/rtabmap/actions/workflows/cmake-ros.yml"><img src="https://github.com/introlab/rtabmap/actions/workflows/cmake-ros.yml/badge.svg" alt="Build Status"/> <br> <a href="https://github.com/introlab/rtabmap/actions/workflows/docker.yml"><img src="https://github.com/introlab/rtabmap/actions/workflows/docker.yml/badge.svg" alt="Build Status"/>
-           </td>
-        </tr>
-        <tr>
-           <td>Windows</td>
-           <td><a href="https://ci.appveyor.com/project/matlabbe/rtabmap/branch/master"><img src="https://ci.appveyor.com/api/projects/status/hr73xspix9oqa26h/branch/master?svg=true" alt="Build Status"/>
-           </td>
-        </tr>
-     </tbody>
-  </table>
+# Modifications
+Several changes have been made w.r.t the original rtabmap package. They are described in detail below.
+ ## Parameters
+ In order to customize the modified version of rtabmap, several parameters have been added (see ```rtabmap/corelib/include/rtabmap/core/Parameters.h```). These new parameters have Regions as prefix and they are:
+ - ModelPath (string), the path to the pre-trained model;
+ - UseGPU (bool), whether use GPU for the model inference (default to false);
+ - TargetHeight (int), target height for images to feed the neural net (default to 224);
+ - TargetWidth (int), target width for images to feed the neural net (default to 224);
+ - UseExponentialMovingAverage (bool), whether use exponential moving average for weighting regions (default to true);
+ - Alpha (float), the weight for the exponential moving average (default to 0.9);
+ - InferenceMode (bool), whether rtabmap must be launched in inference mode (default to false);
+ - UseXY (bool), whether the 2D pose is computed using (x,y) coordinates. Coordinates (x,z) are used if false (default to false);
+ - KRegionsRetrieved* (int), the top-k regions to retrieve (default to 0);
+ - MaxNodesRetrieved* (int), the max number of nodes to retrieve (default to 0);
+ - ImagesSaveFolder (string), the folder in which save the images;
+ - DatasetSaveFile (string), the file in which save the images paths and the regions assigned;
+ - GraphSaveFile (string), the file in which save the poses and the regions assigned for valid signatures;
+ - CentroidsSaveFile (string), the file in which save the centroids and the regions assigned;
+ - RadiusUpperBound (float), the radius upper bound for a region (default to 80);
+ - DesiredAverageCardinality (int), the desired average cardinality for a region (default to 100);
+ - MeshShapeFactor (float), the mesh shape factor to tune clustering (default to 50);
+ - KeepPrefixPath (bool), whether the entire path or just the name should be kept when saving the images for the dataset (default to false);
+ - NameTotalLength (int), the total name length for the images. 0s are used to fill the name (default to 6).
  
- #### ROS Binaries
  
- `ros-$ROS_DISTRO-rtabmap`
  
- <table>
-    <tbody>
-        <tr>
-           <td rowspan="2">ROS 1</td>
-           <td>Melodic</td>
-            <td><a href="http://build.ros.org/job/Mbin_ubv8_uBv8__rtabmap__ubuntu_bionic_arm64__binary/"><img src="http://build.ros.org/buildStatus/icon?job=Mbin_ubv8_uBv8__rtabmap__ubuntu_bionic_arm64__binary" alt="Build Status"/></td>
-        </tr>
-        <tr>
-            <td>Noetic</td>
-            <td><a href="http://build.ros.org/job/Nbin_ufv8_uFv8__rtabmap__ubuntu_focal_arm64__binary/"><img src="http://build.ros.org/buildStatus/icon?job=Nbin_ufv8_uFv8__rtabmap__ubuntu_focal_arm64__binary" alt="Build Status"/></td>
-        </tr>
-        <tr>
-            <td rowspan="4">ROS 2</td>
-            <td>Foxy</td>
-            <td><a href="http://build.ros2.org/job/Fbin_uF64__rtabmap__ubuntu_focal_amd64__binary/"><img src="http://build.ros2.org/buildStatus/icon?job=Fbin_uF64__rtabmap__ubuntu_focal_amd64__binary" alt="Build Status"/></td>
-        </tr>
-        <tr>
-            <td>Galactic</td>
-            <td><a href="http://build.ros2.org/job/Gbin_uF64__rtabmap__ubuntu_focal_amd64__binary/"><img src="http://build.ros2.org/buildStatus/icon?job=Gbin_uF64__rtabmap__ubuntu_focal_amd64__binary" alt="Build Status"/></td>
-        </tr>
-        <tr>
-            <td>Humble</td>
-            <td><a href="http://build.ros2.org/job/Hbin_uJ64__rtabmap__ubuntu_jammy_amd64__binary/"><img src="http://build.ros2.org/buildStatus/icon?job=Hbin_uJ64__rtabmap__ubuntu_jammy_amd64__binary" alt="Build Status"/></td>
-        </tr>
-        <tr>
-            <td>Rolling</td>
-            <td><a href="http://build.ros2.org/job/Rbin_uJ64__rtabmap__ubuntu_jammy_amd64__binary/"><img src="http://build.ros2.org/buildStatus/icon?job=Rbin_uJ64__rtabmap__ubuntu_jammy_amd64__binary" alt="Build Status"/></td>
-        </tr>
-    </tbody>
-</table>
  

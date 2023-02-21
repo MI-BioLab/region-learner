@@ -259,9 +259,6 @@ namespace rtabmap
 		std::pair<int, float> selectHypothesis(const std::map<int, float> &posterior,
 											   const std::map<int, float> &likelihood) const;
 
-		int getTargetHeight() { return this->_target_height; }
-		int getTargetWidth() { return this->_target_width; }
-
 	private:
 
 		//pytorch

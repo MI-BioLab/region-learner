@@ -20,7 +20,7 @@ Several changes have been made w.r.t the original rtabmap package. They are desc
  - **UseExponentialMovingAverage** (*bool*), whether use exponential moving average for weighting regions (default to true);
  - **Alpha** (*float*), the weight for the exponential moving average (default to 0.9);
  - **InferenceMode** (*bool*), whether rtabmap must be launched in inference mode (default to false). If false, rtabmap will be in exploration mode, so the graph is clustered, and the files saved for the training;
- - **UseXY** (*bool*), whether the 2D pose is computed using (x,y) coordinates. Coordinates (x,z) are used if false (default to false). This parameter must be set depending on the device or the dataset used (e.g. KITTI uses (x,z) coordinates, OpenLoris uses (x,y) coordinates);
+ - **UseXY** (*bool*), whether the 2D pose is computed using (x,y) coordinates. Coordinates (x,z) are used if false (default to false). This parameter must be set depending on the frame of reference of the device or the dataset used (e.g. KITTI uses (x,z) coordinates, OpenLoris uses (x,y) coordinates);
  - **KRegionsRetrieved*** (*int*), the top-k regions to retrieve (default to 0);
  - **MaxNodesRetrieved*** (*int*), the max number of nodes to retrieve (default to 0);
  - **ImagesSaveFolder** (*string*), the folder in which save the images;
@@ -39,12 +39,12 @@ To correctly launch rtabmap with this parameters you should write ```--Regions/{
 
 
 ## General operation
-The modified version of rtabmap can be launched with two different modalities: **exploration mode** and **inference mode**.
+The modified version of rtabmap can be launched in two different modalities: **exploration mode** or **inference mode**.
 
 ### Exploration mode
 It is intended as the exploration phase, in which the robot navigates a new environment, the graph is constructed and clustered and some important files are saved for the training. If rtabmap is launched with the parameter ```--Regions/InferenceMode false```, then it starts in exploration mode. Here, you should specify the parameters:
-- **UseXY**, because the graph clustering must know which coordinates to use;
-- **ImagesSaveFolder**, to save the images acquired during the exploration, that are necessary for the training;
+- **UseXY**, because the graph clustering algorithm must know which coordinates to use;
+- **ImagesSaveFolder**, to save the images acquired during the exploration, that are necessary for training;
 - **DatasetSaveFile**, to save the dataset. The dataset is a txt file that links the names of the images (or the entire path if **KeepPrefixPath** is true) and the corresponding regions. <br> For example, the content of the dataset file can be <br> 000001.png&emsp;0 <br>000002.png&emsp;0 <br>... <br>000200.png&emsp;5<br>one line for each image acquired;
 - **GraphSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the nodes of the graph constructed by rtabmap with the corresponding regions in a txt file. <br> For example, the content of the graph file can be <br> 0&emsp;0&emsp;0 <br>0.2011&emsp;0.1187&emsp;0 <br>... <br>63.0569&emsp;98.2839&emsp;5<br>one line for each node in the graph;
 - **CentroidsSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the centroids of the clustered graph and the corresponding regions in a txt file. <br> For example, the content of the centroids file can be <br>-1.22641&emsp;23.1104&emsp;0<br>0.227025&emsp;79.8067&emsp;1<br>...<br>69.0922&emsp;217.902&emsp;5<br>one line for each cluster;
@@ -65,7 +65,7 @@ This is the inference phase; after training on a particular environment the robo
 The classes for the graph clustering have been added to the code. Since for now the algorithm isn't able to reassign a node to a different cluster (because the neural network isn't trained in a continual learning fashion), the code is simplified to perform a static clustering. You can find the implementation in the folders ```rtabmap/corelib/include/rtabmap/core/graph_clustering``` and ```rtabmap/corelib/src/graph_clustering```, for headers and cpp respectively.
 
 Code changes were made in the following files (both header and cpp):
-- *Rtabmap*, which includes the main cycle of rtabmap. Here the graph is clustered and the file saved or the inference is performed, according to the current mode of rtabmap;
+- *Rtabmap*, which includes the main cycle of rtabmap. Here the graph is clustered and the file saved or the inference is performed, according to the current mode of rtabmap. Methods ```loadModel```, ```imageToTensor```, ```predict```, ```computeWeightedExponentialMovingAverage```, ```sortRegionsProbabilities```, ```saveRegionsDatasetAndGraph```, ```saveRegionsDataset```, ```saveRegionsGraph```, ```computeImageName``` were added;
 - *Memory*, where methods ```forgetByRegion``` and ```reactivateSignaturesByRegion``` were added;
 - *Signature* , where methods ```setRegion``` and ```getRegion``` were added;
 - *DBDriver* where the methods ```countRegions``` and ```loadSignaturesByRegion``` were added to load information from the DB, and methods ```countRegionsQuery``` and ```loadSignaturesByRegionQuery``` to specialize them inside *DBDriverSqlite3*.

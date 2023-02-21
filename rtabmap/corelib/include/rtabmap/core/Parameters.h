@@ -397,7 +397,7 @@ class RTABMAP_EXP Parameters
     RTABMAP_PARAM(Regions, UseExponentialMovingAverage,   bool, true,     "Use exponential moving average for weighting regions.");
     RTABMAP_PARAM(Regions, Alpha,                         float, 0.9,     "Weight for the exponential moving average.");
     RTABMAP_PARAM(Regions, InferenceMode,                 bool, false,    "Set if rtabmap must be launched in inference mode.");
-    RTABMAP_PARAM(Regions, UseXY,                         bool, false,    "Set if the 2D pose is computed used (x,y) coordinates. Coordinates (x,z) are used if false.");
+    RTABMAP_PARAM(Regions, UseXY,                         bool, false,    "Set if the 2D pose is computed using (x,y) coordinates. Coordinates (x,z) are used if false.");
     RTABMAP_PARAM(Regions, KRegionsRetrieved,             int, 0,         "The top-k regions to retrieve.");
     RTABMAP_PARAM(Regions, MaxNodesRetrieved,             int, 0,         "Max number of nodes to retrieve.");
     RTABMAP_PARAM_STR(Regions, ImagesSaveFolder,          "",             "Folder in which save the images. ");

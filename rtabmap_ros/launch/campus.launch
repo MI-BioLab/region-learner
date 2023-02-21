@@ -25,6 +25,7 @@
                                                    --Rtabmap/MemoryThr 50 
                                                    --Rtabmap/LoopThr 0.08
                                                    --Rtabmap/CreateIntermediateNodes false
+                                                   --Rtabmap/DetectionRate 1
                                                    --Regions/ModelPath /home/matteo/models/best_campus_corridor_3_arc_serialized.pt 
                                                    --Regions/InferenceMode true
                                                    --Regions/UseXY true

@@ -14,14 +14,14 @@
         <arg name="right_camera_info_topic" value="/kitti/camera_color_right/camera_info" />
         <arg name="use_odom_features" value="true" />
         <arg name="args" value="-d --Grid/CellSize 0.3 
+        --Grid/ClusterRadius 1 
         --Mem/IncrementalMemory true 
         --Mem/InitWMWithAllNodes false
-        --Grid/ClusterRadius 1 
         --RGBD/OptimizeMaxError 10 
         --Rtabmap/MemoryThr 50 
-        --Rtabmap/TimeThr 0
         --Rtabmap/LoopThr 0.05 
         --Rtabmap/CreateIntermediateNodes false
+        --Rtabmap/DetectionRate 1
         --Regions/ModelPath /home/matteo/models/best_kitti_00_serialized.pt 
         --Regions/InferenceMode false
         --Regions/UseXY false
@@ -36,12 +36,9 @@
         --Regions/MeshShapeFactor 1
         --Regions/KeepPrefixPath false
         --Regions/NameTotalLength 6"
-        
         />
     </include>
 
-    <!--<node pkg="rtabmap_ros" type="map_optimizer" name="map_optimizer" output="screen" />-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_color_left_link_broadcaster"  args="0 0 0 0 0 0 base_link camera_color_left" />
-    <!--<node pkg="tf2_ros" type="static_transform_publisher" name="base_to_camera_color_left_link_broadcaster"  args="0 0 0 0 0 0 base_link camera_color_left" />-->
 
 </launch>

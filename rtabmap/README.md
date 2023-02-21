@@ -46,7 +46,7 @@ It is intended as the exploration phase, in which the robot navigates a new envi
 - **UseXY**, because the graph clustering must know which coordinates to use;
 - **ImagesSaveFolder**, to save the images acquired during the exploration, that are necessary for the training;
 - **DatasetSaveFile**, to save the dataset. The dataset is a txt file that links the names of the images (or the entire path if **KeepPrefixPath** is true) and the corresponding regions. <br> For example, the content of the dataset file can be <br> 000001.png&emsp;0 <br>000002.png&emsp;0 <br>... <br>000200.png&emsp;5<br>one line for each image acquired;
-- **GraphSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the nodes of the graph constructed by rtabmap with the corresponding regions in a txt file. <br> For example, the content of the graph file can be <br> ```0  0  0``` <br>```0.2011  0.1187  0```<br>```...```<br>```63.0569  98.2839  5```<br>one line for each node in the graph;
+- **GraphSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the nodes of the graph constructed by rtabmap with the corresponding regions in a txt file. <br> For example, the content of the graph file can be <br> 0&emsp;0&emsp;0 <br>0.2011&emsp;0.1187&emsp;0 <br>... <br>63.0569&emsp;98.2839&emsp;5<br>one line for each node in the graph;
 - **CentroidsSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the centroids of the clustered graph and the corresponding regions in a txt file. <br> For example, the content of the centroids file can be <br>-1.22641&emsp;23.1104&emsp;0<br>0.227025&emsp;79.8067&emsp;1<br>...<br>69.0922&emsp;217.902&emsp;5<br>one line for each cluster;
 - **RadiusUpperBound**, **DesiredAverageCardinality** and **MeshShapeFactor**, to tune the clustering algorithm;
 - **KeepPrefixPath**, **NameTotalLength**, to define how to save the images names in the dataset file.
@@ -59,6 +59,19 @@ This is the inference phase; after training on a particular environment the robo
  - **UseGPU** whether use GPU for the model inference. Since the model is very cheap, in our experiments the inference was always performed using CPU;
  - **TargetHeight** and **TargetWidth** to define the image size to feed the model;
  - **UseExponentialMovingAverage** and **Alpha** if you want to use the exponential moving average;
+
+
+## Code
+The classes for the graph clustering have been added to the code. Since for now the algorithm isn't able to reassign a node to a different cluster (because the neural network isn't trained in a continual learning fashion), the code is simplified to perform a static clustering. You can find the implementation in the folders ```rtabmap/corelib/include/rtabmap/core/graph_clustering``` and ```rtabmap/corelib/src/graph_clustering```, for headers and cpp respectively.
+
+Code changes were made in the following files (both header and cpp):
+- *Rtabmap*, which includes the main cycle of rtabmap. Here the graph is clustered and the file saved or the inference is performed, according to the current mode of rtabmap;
+- *Memory*, where methods ```forgetByRegion``` and ```reactivateSignaturesByRegion``` were added;
+- *Signature* , where methods ```setRegion``` and ```getRegion``` were added;
+- *DBDriver* where the methods ```countRegions``` and ```loadSignaturesByRegion``` were added to load information from the DB, and methods ```countRegionsQuery``` and ```loadSignaturesByRegionQuery``` to specialize them inside *DBDriverSqlite3*.
+
+
+To store the region inside the database, the column ```region_id``` has been added to table ```Node``` in the database schemas in the ```rtabmap/corelib/src/resources``` (also in those contained in ```rtabmap/corelib/src/resources/backward_compatibility```).
  
  
  

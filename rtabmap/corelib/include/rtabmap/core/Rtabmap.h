@@ -266,7 +266,6 @@ namespace rtabmap
 		torch::Tensor imageToTensor(const cv::Mat &image);
 		torch::Tensor predict(const torch::Tensor &input);
 		void computeWeightedExponentialMovingAverage(const torch::Tensor &output, float alpha = 0.9);
-		void computeWeightedMovingAverage(const torch::Tensor &output);
 		void sortRegionsProbabilities(std::vector<std::pair<float, int>> &indices);
 		void saveRegionsDatasetAndGraph(const cv::Mat &image, const graph_clustering::Node::SharedPtr &node, const Signature *signature) const;
 		void saveRegionsDataset(const cv::Mat &image, unsigned long signatureId, unsigned long region) const;
@@ -441,7 +440,6 @@ namespace rtabmap
 		std::vector<int64_t> _target_size;
 
 		std::vector<float> _region_probabilities;
-		int _factor_n;
 
 #ifdef RTABMAP_PYTHON
 		PythonInterface *_python;

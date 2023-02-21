@@ -188,8 +188,7 @@ namespace rtabmap
 						 _keep_prefix_path(Parameters::defaultRegionsKeepPrefixPath()),
 						 _useXY(Parameters::defaultRegionsUseXY()),
 						 _max_nodes_retrieved(Parameters::defaultRegionsMaxNodesRetrieved()),
-						 _k_regions_retrieved(Parameters::defaultRegionsKRegionsRetrieved()),
-						 _factor_n(0)
+						 _k_regions_retrieved(Parameters::defaultRegionsKRegionsRetrieved())
 #ifdef RTABMAP_PYTHON
 						 ,
 						 _python(new PythonInterface())
@@ -2562,7 +2561,8 @@ namespace rtabmap
 					}
 					else
 					{
-						this->computeWeightedMovingAverage(output);
+						// it is just an exponential moving average with alpha=1.0
+						this->computeWeightedExponentialMovingAverage(output, 1.0);
 					}
 
 					int region = std::distance(this->_region_probabilities.begin(), std::max_element(this->_region_probabilities.begin(), this->_region_probabilities.end()));
@@ -6997,32 +6997,6 @@ namespace rtabmap
 			for (int i = 0; i < output.sizes()[1]; i++)
 			{
 				this->_region_probabilities[i] = alpha * output[0][i].item<float>() + (1 - alpha) * this->_region_probabilities[i];
-			}
-		}
-	}
-
-	void Rtabmap::computeWeightedMovingAverage(const torch::Tensor &output)
-	{
-		if (this->_region_probabilities.size() == 0)
-		{
-			for (int i = 0; i < output.sizes()[1]; i++)
-			{
-				this->_region_probabilities.emplace_back(output[0][i].item<float>());
-			}
-		}
-		else
-		{
-			for (int i = 0; i < output.sizes()[1]; i++)
-			{
-				float probability = this->_region_probabilities[i] * (this->_factor_n);
-				probability += (output[0][i].item<float>() * (++this->_factor_n));
-				probability /= this->_factor_n;
-				this->_region_probabilities[i] = probability;
-			}
-			float max = *std::max_element(this->_region_probabilities.begin(), this->_region_probabilities.end());
-			for (int i = 0; i < this->_region_probabilities.size(); i++)
-			{
-				this->_region_probabilities[i] /= max;
 			}
 		}
 	}

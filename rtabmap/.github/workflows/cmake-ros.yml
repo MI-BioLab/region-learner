@@ -1,0 +1,66 @@
+name: CMake-ROS
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    name: Build on ros ${{ matrix.ros_distribution }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        ros_distribution: [melodic, noetic, foxy, galactic, humble, rolling]
+        include:
+        - ros_distribution: 'melodic' 
+          os: ubuntu-18.04
+        - ros_distribution: 'noetic'
+          os: ubuntu-20.04
+        - ros_distribution: 'foxy'
+          os: ubuntu-20.04
+        - ros_distribution: 'galactic'
+          os: ubuntu-20.04
+        - ros_distribution: 'humble'
+          os: ubuntu-22.04
+        - ros_distribution: 'rolling'
+          os: ubuntu-22.04
+
+    steps:
+    - uses: ros-tooling/setup-ros@v0.4
+      with:
+        required-ros-distributions: ${{ matrix.ros_distribution }}
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install ros-${{ matrix.ros_distribution }}-rtabmap
+        sudo apt-get -y remove ros-${{ matrix.ros_distribution }}-rtabmap
+
+    - uses: actions/checkout@v2
+
+    - name: Configure CMake
+      run: |
+        source /opt/ros/${{ matrix.ros_distribution }}/setup.bash
+        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Info
+      working-directory: ${{github.workspace}}/build/bin
+      run: |
+        source /opt/ros/${{ matrix.ros_distribution }}/setup.bash
+        ./rtabmap-console --version
+      

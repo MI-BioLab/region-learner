@@ -1,0 +1,19 @@
+rtabmap-kitti_dataset --Rtabmap/PublishRAMUsage true \
+                      --Rtabmap/DetectionRate 2 \
+                      --Rtabmap/CreateIntermediateNodes true \
+                      --RGBD/LinearUpdate 0 \
+                      --GFTT/QualityLevel 0.01 \
+                      --GFTT/MinDistance 7 \
+                      --OdomF2M/MaxSize 3000 \
+                      --Mem/STMSize 30 \
+                      --Kp/MaxFeatures 750 \
+                      --Vis/MaxFeatures 1500 \
+                      --gt /mnt/d/datasets/KITTI_dataset/KITTI_odometry/poses/00.txt  \
+                      --color true \
+                      --height true \
+                      /mnt/d/datasets/KITTI_dataset/KITTI_odometry/sequences/00 
+                      
+
+
+/mnt/d/Users/scuma/Università/datasets/KITTI_odometry/poses/00.txt
+/mnt/c/Users/scuma/Università/datasets/KITTI_odometry/sequences/00 

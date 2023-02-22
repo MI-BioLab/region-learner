@@ -51,8 +51,6 @@ It is intended as the exploration phase, in which the robot navigates a new envi
 - **RadiusUpperBound**, **DesiredAverageCardinality** and **MeshShapeFactor**, to tune the clustering algorithm;
 - **KeepPrefixPath**, **NameTotalLength**, to define how to save the images names in the dataset file.
 
-For the training, only the saved images and the dataset file are required. Other files are only for visualization.
-
 ### Inference mode
 This is the inference phase; after training on a particular environment the robot can predict the regions probabilities by observing the images it is acquiring. Here, you should specify the parameters:
 - **ModelPath** because the inference mode requires the trained model;
@@ -67,8 +65,8 @@ The classes for the graph clustering have been added to the code. Since for now 
 Code changes were made in the following files (both header and cpp):
 - *Rtabmap*, which includes the main cycle of rtabmap. Here the graph is clustered and the file saved or the inference is performed, according to the current mode of rtabmap. Methods ```loadModel```, ```imageToTensor```, ```predict```, ```computeWeightedExponentialMovingAverage```, ```sortRegionsProbabilities```, ```saveRegionsDatasetAndGraph```, ```saveRegionsDataset```, ```saveRegionsGraph```, ```computeImageName``` were added;
 - *Memory*, where methods ```forgetByRegion``` and ```reactivateSignaturesByRegion``` were added;
-- *Signature* , where methods ```setRegion``` and ```getRegion``` were added;
-- *DBDriver* where the methods ```countRegions``` and ```loadSignaturesByRegion``` were added to load information from the DB, and methods ```countRegionsQuery``` and ```loadSignaturesByRegionQuery``` to specialize them inside *DBDriverSqlite3*.
+- *Signature*, where methods ```setRegion``` and ```getRegion``` were added;
+- *DBDriver*, where the methods ```countRegions``` and ```loadSignaturesByRegion``` were added to load information from the DB, and methods ```countRegionsQuery``` and ```loadSignaturesByRegionQuery``` to specialize them inside *DBDriverSqlite3*.
 
 
 To store the regions inside the database, the column ```region_id``` has been added to table ```Node``` in the database schemas in the ```rtabmap/corelib/src/resources``` (also in those contained in ```rtabmap/corelib/src/resources/backward_compatibility```).

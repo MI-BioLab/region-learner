@@ -81,8 +81,7 @@ def parse_parameters():
         position_annotation, test_colors, circle_dim, annotate_regions
 
 def draw_centroids(x, y, regions, colors=[], 
-                    position=None, position_color="blue", position_dim=80, position_annotation="robot",
-                    x_test=None, y_test=None, test_colors="bisque"):
+                    position=None, position_color="blue", position_dim=80, position_annotation="robot"):
     """Function to draw the centroids.
 
     Args:
@@ -94,10 +93,6 @@ def draw_centroids(x, y, regions, colors=[],
         position_color (str, optional): the color for the position. Defaults to "blue".
         position_dim (int, optional): the radius of the circle representing the position. Defaults to 80.
         position_annotation (str, optional): the annotation to be written next to the position. Defaults to "robot".
-        x_test (ndarray, optional): the x coordinates of the centroids of the test sequence. Defaults to None.
-        y_test (ndarray, optional): the y coordinates of the centroids of the test sequence. Defaults to None.
-        test_colors (str, optional): the color to use to draw the test sequence. Defaults to "bisque".
-
     Raises:
         Exception: regions and x must be the same length.
         Exception: regions and y must be the same length.
@@ -119,18 +114,6 @@ def draw_centroids(x, y, regions, colors=[],
         for i in range(diff):
             colors.append(colors[-1])
     ax.scatter(x, y, c = colors)
-
-    if x_test and y_test:
-        if len(x_test) != len(y_test):
-            raise Exception(f"draw_centroids: x_test and y_test must be the same length! Got {len(x_test)} and {len(y_test)}")
-        if type(test_colors) is list:
-            if len(test_colors) > 0 and len(test_colors) < len(x_test):
-                diff = len(x_test) - len(test_colors)
-                for i in range(diff):
-                    test_colors.append(test_colors[-1])
-
-        ax.scatter(x_test, y_test, c = test_colors)
-        ax.plot(x_test, y_test, color = test_colors)
 
     if position:
         ax.scatter(position[0], position[1], c = position_color, s = position_dim)

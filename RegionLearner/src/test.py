@@ -5,7 +5,6 @@ import os
 
 from glob import glob
 
-from model import get_model
 from utils import read_txt
 from metrics import top_N_accuracy     
 
@@ -30,7 +29,7 @@ def parse_parameters():
     image_width = 224
     image_height = 224
     
-    path_to_test_dataset="D:/UNI/datasets/OpenLoris/corridor1-1_5-package/corridor1-2/color/"
+    path_to_test_images="D:/UNI/datasets/OpenLoris/corridor1-1_5-package/corridor1-2/color/"
     path_to_test="datasets/OpenLoris/corridor/test/"
     train_correspondences_file="corridor2_train_correspondences.txt"
     test_on_training_set = False
@@ -50,7 +49,7 @@ def parse_parameters():
     parser.add_argument('--model-path-serialized', type=str)
     parser.add_argument('--image-width', type=int)
     parser.add_argument('--image-height', type=int)
-    parser.add_argument('--path-to-test-dataset', type=str)
+    parser.add_argument('--path-to-test-images', type=str)
     parser.add_argument('--path-to-test', type=str)
     parser.add_argument('--train-correspondences-file', type=str)
     parser.add_argument('--test-on-training-set', type=int)
@@ -82,7 +81,7 @@ def parse_parameters():
     if "test" in config:
         test_on_training_set = config["test"]["test_on_training_set"] =="true" if "test_on_training_set" in config["test"] else test_on_training_set
         if not test_on_training_set:
-            path_to_test_dataset = config["test"]["path_to_test_dataset"] if "path_to_test_dataset" in config["test"] else path_to_test_dataset
+            path_to_test_images = config["test"]["path_to_test_images"] if "path_to_test_images" in config["test"] else path_to_test_images
             path_to_test = config["test"]["path_to_test"] if "path_to_test" in config["test"] else path_to_test
             train_correspondences_file = config["test"]["train_correspondences_file"] if "train_correspondences_file" in config["test"] else train_correspondences_file
         use_best_model = config["test"]["use_best_model"] == "true" if "use_best_model" in config["test"] else use_best_model
@@ -101,7 +100,7 @@ def parse_parameters():
     image_width = args.image_width if args.image_width else image_width
     image_height = args.image_height if args.image_height else image_height
     
-    path_to_test_dataset = args.path_to_test_dataset if args.path_to_test_dataset else path_to_test_dataset
+    path_to_test_images = args.path_to_test_images if args.path_to_test_images else path_to_test_images
     path_to_test = args.path_to_test if args.path_to_test else path_to_test
     train_correspondences_file = args.train_correspondences_file if args.train_correspondences_file else train_correspondences_file
     test_on_training_set = args.test_on_training_set if args.test_on_training_set else test_on_training_set
@@ -111,7 +110,7 @@ def parse_parameters():
     alpha = args.alpha if args.alpha else alpha   
     
     return path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, model_path, model_path_serialized, \
-        image_width, image_height, path_to_test_dataset, path_to_test, train_correspondences_file, test_on_training_set, \
+        image_width, image_height, path_to_test_images, path_to_test, train_correspondences_file, test_on_training_set, \
         use_best_model ,top_accuracy, use_exponential_moving_average, alpha   
         
 if __name__ == '__main__':
@@ -119,10 +118,10 @@ if __name__ == '__main__':
     print(f"Using {device} device")
     
     path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, model_path, model_path_serialized, \
-    image_width, image_height, path_to_test_dataset, path_to_test, train_correspondences_file, test_on_training_set, \
+    image_width, image_height, path_to_test_images, path_to_test, train_correspondences_file, test_on_training_set, \
     use_best_model ,top_accuracy, use_exponential_moving_average, alpha = parse_parameters()
 
-    images_paths = [os.path.normpath(path) for path in glob(path_to_test_dataset + "*")]
+    images_paths = [os.path.normpath(path) for path in glob(path_to_test_images + "*")]
     train_images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     train_centroids = read_txt(path_to_dataset + centroids_file, "\t")
     
@@ -136,8 +135,8 @@ if __name__ == '__main__':
         y = []
         x = []
         for i in range(len(train_correspondences)):
-            start = images_paths.index(os.path.normpath(path_to_test_dataset + train_correspondences[i][2]))
-            end = images_paths.index(os.path.normpath(path_to_test_dataset + train_correspondences[i][3]))
+            start = images_paths.index(os.path.normpath(path_to_test_images + train_correspondences[i][2]))
+            end = images_paths.index(os.path.normpath(path_to_test_images + train_correspondences[i][3]))
             for j in range(start, end):
                 y.append(train_correspondences[i][1])
                 x.append(images_paths[j])  

@@ -46,7 +46,7 @@ def top_N_accuracy(x, y, model, n=1, image_height=224, image_width=224, device="
         if use_exponential_moving_average:
             if i != 0:
                 output = exponential_moving_average(output, prev_ema, alpha)
-            prev_ema = copy.deepcopy(output) 
+            prev_ema = output
         sorted_indices = np.argsort(-output)
         
         for j in range(len(top_n_accuracy)):

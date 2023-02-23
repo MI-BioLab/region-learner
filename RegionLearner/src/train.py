@@ -183,6 +183,9 @@ if __name__ == "__main__":
     random_perspective_distortion, random_perspective_p, random_rotation_degrees, save_best_model, save_model_path, \
     save_model_serialized,  serialize_on_gpu, save_model_path_serialized = parse_parameters()
 
+    if loss_reduction not in ["mean", "sum"]:
+        loss_reduction = "mean"
+
     images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     centroids = read_txt(path_to_dataset + centroids_file, "\t")
     total_regions = len(centroids)

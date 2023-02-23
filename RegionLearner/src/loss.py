@@ -37,13 +37,13 @@ class FocalLoss(nn.Module):
                 𝑖=1
     """
     
-    def __init__(self, gamma, alpha=None, reduction="none"):
+    def __init__(self, gamma, alpha=None, reduction="mean"):
         """Constructor for the FocalLoss class.
 
         Args:
             gamma (float): the gamma parameter of the focal loss.
             alpha (ndarray, optional): the weights for the classes. Defaults to None.
-            reduction (str, optional): the reduction to apply to the focal loss. It can be "mean", "sum" or "none". Defaults to "none".
+            reduction (str, optional): the reduction to apply to the focal loss. It can be "mean", "sum". Defaults to "mean".
         """
         
         super().__init__()
@@ -55,4 +55,4 @@ class FocalLoss(nn.Module):
         cross_entropy = F.cross_entropy(input, target, reduction="none", weight=self.alpha) # weighted cross-entropy, α is applied here.
         pt = torch.exp(-cross_entropy)
         focal_loss = (1 - pt) ** self.gamma * cross_entropy
-        return torch.mean(focal_loss) if self.reduction == "mean" else torch.sum(focal_loss) if self.reduction == "sum" else focal_loss
+        return torch.sum(focal_loss) if self.reduction == "sum" else torch.mean(focal_loss)

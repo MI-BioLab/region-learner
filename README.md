@@ -6,10 +6,9 @@ The paper has been submitted to [IROS 2023](https://ieee-iros.org/). <with the f
 
 <!--- https://user-images.githubusercontent.com/41426942/220202864-8da8bff3-fd33-4902-8a96-14e2577a1376.mp4 -->
 
-# Get started
+# Run the experiments
 
 The idea is explained in detail in the paper, therefore the focus below will be on how to install everything to easily reproduce experiments (or perform new ones). Requirements and details for each part are outlined in the README files in the corresponding directory.
-
 
 ## Setting the environment
 1. Clone the repository.
@@ -20,8 +19,8 @@ The idea is explained in detail in the paper, therefore the focus below will be 
 6. Launch rtabmap_ros with the appropriate launch file in exploration mode using the command ```roslaunch rtabmap_ros {lauchername}.launch```. Then, run the bag using the command ```rosbag play --clock path/to/{bagname}.bag``` to acquire the dataset.
 7. Set the configurations of RegionLearner in ```RegionLearner/config/config.cfg```.
 8. Launch the train of the deep neural network using the command ```python path/to/RegionLearner/src/train.py```.
-9. Optionally launch the test with the command ```python path/to/RegionLearner/src/test.py``` to see the top-N accuracy of the network predictions.
-10. Launch rtabmap_ros with the appropriate launch file in inference mode to predict the regions probabilities, enabling large scale loop closure detection. The commands to use are the same as 6.
+9. Launch rtabmap_ros with the appropriate launch file in inference mode to predict the regions probabilities, enabling large scale loop closure detection. The commands to use are the same as 6.
+10. Optionally launch the test with the command ```python path/to/RegionLearner/src/test.py``` to see the top-N accuracy of the network predictions.
 
 
 If you want to use the loop closure inspector tool, you should do:

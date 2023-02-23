@@ -23,9 +23,10 @@ def parse_parameters():
     position_color="blue"
     position_dim=80
     position_annotation="robot"
-    test_colors="bisque"
     circle_dim=10
     annotate_regions=False
+    x_label = "x (m)"
+    y_label = "y (m)"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--config-path', type=str)
@@ -38,9 +39,10 @@ def parse_parameters():
     parser.add_argument('--position-color', type=str)
     parser.add_argument('--position-dim', type=int)
     parser.add_argument('--position-annotation', type=str)
-    parser.add_argument('--test-colors', type=str)
     parser.add_argument('--circle-dim', type=int)
     parser.add_argument('--annotate-regions', type=int)
+    parser.add_argument('--x-label', type=str)
+    parser.add_argument('--y-label', type=str)
 
     args = parser.parse_args()
 
@@ -60,7 +62,6 @@ def parse_parameters():
         position_color = config["visualizer"]["position_color"] if "position_color" in config["visualizer"] else position_color
         position_dim = int(config["visualizer"]["position_dim"]) if "position_dim" in config["visualizer"] else position_dim
         position_annotation = config["visualizer"]["position_annotation"] if "position_annotation" in config["visualizer"] else position_annotation
-        test_colors = config["visualizer"]["test_colors"] if "test_colors" in config["visualizer"] else test_colors
         circle_dim = int(config["visualizer"]["circle_dim"]) if "circle_dim" in config["visualizer"] else circle_dim 
         annotate_regions = config["visualizer"]["annotate_regions"] == "true" if "annotate_regions" in config["visualizer"] else annotate_regions 
 
@@ -73,15 +74,16 @@ def parse_parameters():
     position_color = args.position_color if args.position_color else position_color
     position_dim = args.position_dim if args.position_dim else position_dim
     position_annotation = args.position_annotation if args.position_annotation else position_annotation
-    test_colors = args.test_colors if args.test_colors else test_colors
     circle_dim = args.circle_dim if args.circle_dim else circle_dim
     annotate_regions = args.annotate_regions if args.annotate_regions else annotate_regions
+    x_label = args.x_label if args.x_label else x_label
+    y_label = args.y_label if args.y_label else y_label
     
     return path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, position_color, position_dim, \
-        position_annotation, test_colors, circle_dim, annotate_regions
+        position_annotation, circle_dim, annotate_regions, x_label, y_label
 
 def draw_centroids(x, y, regions, colors=[], 
-                    position=None, position_color="blue", position_dim=80, position_annotation="robot"):
+                    position=None, position_color="blue", position_dim=80, position_annotation="robot", x_label="x (m)", y_label="y (m)"):
     """Function to draw the centroids.
 
     Args:
@@ -93,6 +95,9 @@ def draw_centroids(x, y, regions, colors=[],
         position_color (str, optional): the color for the position. Defaults to "blue".
         position_dim (int, optional): the radius of the circle representing the position. Defaults to 80.
         position_annotation (str, optional): the annotation to be written next to the position. Defaults to "robot".
+        x_label (str, optional): the label to display for axis x. Defaults to "x (m)".
+        y_label (str, optional): the label to display for axis y. Defaults to "y (m)".
+        
     Raises:
         Exception: regions and x must be the same length.
         Exception: regions and y must be the same length.
@@ -120,13 +125,15 @@ def draw_centroids(x, y, regions, colors=[],
         ax.annotate(position_annotation, (position[0], position[1]))
 
     ax.plot(x, y, color = "black")
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
 
     for i in regions:
         ax.annotate(str(i), (x[i], y[i]))
         
     plt.show()
 
-def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotate_regions=False):
+def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotate_regions=False, x_label="x (m)", y_label="y (m)"):
     """Function to draw the graph colored with a different color for of each region.
 
     Args:
@@ -137,6 +144,8 @@ def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotat
         colors (list, optional): colors to use to draw the nodes. Defaults to [].
         circle_dim (int, optional): the radius of the circle representing the nodes. Defaults to 10.
         annotate_regions (bool, optional): whether annotate the regions. Defaults to False.
+        x_label (str, optional): the label to display for axis x. Defaults to "x (m)".
+        y_label (str, optional): the label to display for axis y. Defaults to "y (m)".
 
     Raises:
         Exception: colors must be a list.
@@ -178,11 +187,13 @@ def draw_regions(x, y, regions, total_regions, colors=[], circle_dim=10, annotat
                     break
 
     ax.scatter(x, y, c = total_colors, s = circle_dim)    
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     plt.show()
 
 if __name__ == "__main__":
     path_to_dataset, images_folder, dataset_file, centroids_file, graph_file, position_color, position_dim, \
-    position_annotation, test_colors, circle_dim, annotate_regions = parse_parameters()
+    position_annotation, circle_dim, annotate_regions, x_label, y_label = parse_parameters()
 
     images_regions = read_txt(path_to_dataset + dataset_file, "\t")
     centroids = read_txt(path_to_dataset + centroids_file, "\t")
@@ -192,7 +203,7 @@ if __name__ == "__main__":
 
     draw_centroids(centroids[:, 0].astype(float), centroids[:, 1].astype(float), centroids[:, 2].astype(int), 
                     position_color=position_color, position_annotation=position_annotation, 
-                    position_dim=position_dim, test_colors=test_colors) 
+                    position_dim=position_dim, x_label=x_label, y_label=y_label) 
 
     draw_regions(graph[:, 0].astype(float), graph[:, 1].astype(float), graph[:, 2].astype(int), total_regions, 
-                circle_dim=int(circle_dim), annotate_regions=annotate_regions)
+                circle_dim=int(circle_dim), annotate_regions=annotate_regions, x_label=x_label, y_label=y_label)

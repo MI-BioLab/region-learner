@@ -68,6 +68,6 @@ OpenLoris has sequences in which odometry cannot be computed using images (due t
 <arg name="args"                        value="--Reg/Strategy 2"/>
 ```
 
-The first three arguments should be uncommented, to also subscribe to laser and odometry. The second ones are used to specify rtabmap to use laser odometry instead of visual odometry.
+The first three arguments should be uncommented, to also subscribe to laser and odometry. The last two are used to specify rtabmap to use laser odometry instead of visual odometry.
 
 So, if when running the experiments rtabmap warns you that the odometry has been lost, try using the parameters as above.

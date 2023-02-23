@@ -56,3 +56,18 @@ Parameter ```--Rtabmap/LoopThr 0.05``` is a threshold that defines whether a sig
 
 Parameters ```--Regions/RadiusUpperBound 40```, ```--Regions/DesiredAverageCardinality 30``` and ```--Regions/MeshShapeFactor 1``` are used only in exploration mode and they tune the clustering algorithm. They should be set accordingly to the dataset used. Values that are too low will create very small clusters, values that are too high will create very large clusters. More in depth, ```--Regions/RadiusUpperBound 40``` refers to the maximum radius of the nodes of the cluster w.r.t. the centroid. Depending on the speed of the robot, this value can vary significantly. For example, KITTI is acquired with cameras on a car, so the velocity is very high and for this reason the radius upper bound is set to 40 meters (because they are traveled in a relatively short time and the clusters will therefore have a reasonable number of nodes), on the contrary Campus is acquired with a mobile robot that is quite slow, so the radius upper bound is set to 3 meters, to avoid clusters with hundreds of nodes. The other two parameters and more in general the scattering-based algorithm are useful to avoid precisely this problem, allowing the algorithm to create new clusters not only when the distance of new nodes from centroids is above the threshold, but also depending on the scattering.
 
+
+## OpenLoris noteworthy thing
+OpenLoris has sequences in which odometry cannot be computed using images (due to the robot moving too fast in unstructured environments, such as white corridors, or because they were acquired with artificial lighting turned off). The following parameters in openloris.launch must be changed in order to perform a laser-based odometry, preventing odometry from being lost in these sequences (e.g., OpenLoris corridor). 
+
+```
+<arg name="subscribe_scan"              value="true"/>
+<arg name="scan_topic"                  value="/scan"/>
+<arg name="odom_topic"                  value="/odom"/> 
+<arg name="visual_odometry"             value="false"/>
+<arg name="args"                        value="--Reg/Strategy 2"/>
+```
+
+The first three arguments should be uncommented, to also subscribe to laser and odometry. The second ones are used to specify rtabmap to use laser odometry instead of visual odometry.
+
+So, if when running the experiments rtabmap warns you that the odometry has been lost, try using the parameters as above.

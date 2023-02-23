@@ -54,10 +54,9 @@ It is intended as the exploration phase, in which the robot navigates a new envi
 ### Inference mode
 This is the inference phase; after training on a particular environment the robot can predict the regions probabilities by observing the images it is acquiring. Here, you should specify the parameters:
 - **ModelPath** because the inference mode requires the trained model;
- - **UseGPU** whether use GPU for the model inference. Since the model is very cheap, in our experiments the inference was always performed using CPU;
+ - **UseGPU** whether use GPU for the inference. Since the model is very cheap, in our experiments the inference was always performed using CPU;
  - **TargetHeight** and **TargetWidth** to define the image size to feed the model;
  - **UseExponentialMovingAverage** and **Alpha** if you want to use the exponential moving average;
-
 
 ## Code
 The classes for the graph clustering have been added to the code. Since for now the algorithm isn't able to reassign a node to a different cluster (because the neural network isn't trained in a continual learning fashion), the code is simplified to perform a static clustering. You can find the implementation in the folders ```rtabmap/corelib/include/rtabmap/core/graph_clustering``` and ```rtabmap/corelib/src/graph_clustering```, for headers and cpp respectively.

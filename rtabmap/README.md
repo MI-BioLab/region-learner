@@ -1,7 +1,7 @@
 rtabmap
 =======
 
-Modified version of rtabmap. Please, refer to the original [rtabmap](https://github.com/introlab/rtabmap) for the installation.
+Modified version of rtabmap. Please, refer to the original [rtabmap](https://github.com/introlab/rtabmap) for the installation. For our experiments, Ubuntu 18.04 were used, so we recommend using the same environment to avoid problems.
 
 # Requirements
 In addition to the requirements in the original version, the following requirements must be satisfied:

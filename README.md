@@ -8,7 +8,7 @@ The paper has been submitted to [IROS 2023](https://ieee-iros.org/). <with the f
 
 # Run the experiments
 
-The idea is explained in detail in the paper, therefore the focus below will be on how to install everything to easily reproduce experiments (or perform new ones). Requirements and details for each part are outlined in the README files in the corresponding directory.
+The idea is explained in detail in the paper, therefore the focus below will be on how to install everything to easily reproduce experiments (or perform new ones). Requirements and details for each part are outlined in the README files in the corresponding directory. Please, when prompted to read a file, read it before continuing with the next steps. 
 
 ## Setting the environment
 1. Clone the repository.

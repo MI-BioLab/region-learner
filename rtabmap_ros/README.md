@@ -1,7 +1,7 @@
 rtabmap_ros
 =======
 
-Modified version of the RTAB-Map's ROS package. Please, refer to the original version of [rtabmap_ros](https://github.com/introlab/rtabmap_ros) for the installation. For our experiments, ROS Melodic and Ubuntu 18.04 were used.
+Modified version of the RTAB-Map's ROS package. Please, refer to the original version of [rtabmap_ros](https://github.com/introlab/rtabmap_ros) for the installation. For our experiments, ROS Melodic and Ubuntu 18.04 were used, so we recommend using the same environment to avoid problems.
 
 # Requirements
 In addition to the requirements in the original version, the following requirements must be satisfied:

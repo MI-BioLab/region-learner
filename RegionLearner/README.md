@@ -46,7 +46,7 @@ The parameters for the neural network are specified in this section. Most of the
 ## Test
 The parameters for the test are defined here. The test is intended as the test on the network predictions (top-1 and top-3 accuracy of the paper), not as the test on the loop closure detection (which can only be performed using rtabmap). Parameters are: 
 - *test_on_training_set* defines whether to test the algorithm on the training set, using the parameters specified in section *dataset*. This is for those datasets (e.g. KITTI) for which a test set does not exist. Default value is false.
-- *path_to_test_images* in case a test set exists, this parameter specifies the path to the images of the test set. **Attention**, the slash at the end of the path is necessary.
+- *path_to_test_images* in case a test set exists, this parameter specifies the path to the images of the test set. 
 - *path_to_test* in case a test set exists, this parameter specifies the path to the test folder. 
 - *train_correspondences_file*, a set of correspondences manually identified between training images and test images.
 - *use_best_model* specifies whether to use the best model specified in *save_model_path* of section **nn** or to use the model saved at the last epoch.
@@ -67,6 +67,7 @@ path_to_test
 
 Parameter *path_to_test_images* was voluntarily written separately to the test path because for datasets where images are already present even outside the rosbags (e.g., OpenLoris) one can directly specify the path to those images, without the need to save them from the bags (e.g., path/to/OpenLoris/market1-1_3-package/market1-1/color/).
 
+**Attention**, the slash at the end of the path is necessary.
 
 ## Visualizer 
 The parameters for the visualizer are specified in this section. The parameters are:
@@ -74,10 +75,10 @@ The parameters for the visualizer are specified in this section. The parameters 
 - *circle_dim* to specify the dimension of the circles that represent the nodes of the graph.
 - *annotate_zones* to define whether the zones in the graph draw should be annotated.
 
-Obviously, graph file, centroids file and the other stuffs must be configured as described above.
+**Attention**, graph file, centroids file and the other stuffs must be configured as described above.
 
 # Noteworthy things
 Noteworthy things are describer below, to provide a better understanding of some important features.
 
 ## Learning rate decay
-Epochs and learning rate can be specified as parameters. The learning rate policy works as follow: the specified learning rate is the initial learning rate. If after 5 epochs the value returned by the loss function does not decrease, the learning rate is divided by a factor of 3. This continues until the learning rate reaches the minimum of $10^{-5}$, when the training stops. On the other side, if the number of epochs exceed that defined in the parameter, training is stopped. In our experiments we used $10^{-3}$ as initial learning rate and 100 as maximum epochs, but training always stopped before 100 epochs because of the decrease in the learning rate.
+Epochs and learning rate can be specified as parameters. The learning rate decay policy works as follow: the specified learning rate is the initial learning rate. If after 5 epochs the value returned by the loss function does not decrease, the learning rate is divided by a factor of 3. This continues until the learning rate reaches the minimum of $10^{-5}$, when the training stops. On the other side, if the number of epochs exceed that defined in the parameter, training is stopped. In our experiments we used $10^{-3}$ as initial learning rate and 100 as maximum epochs, but training always stopped before 100 epochs because of the decrease in the learning rate.

@@ -28,7 +28,7 @@ Once you read all the README files as listed above, you should be able to unders
 4. At this point, the trained neural network is ready to be used for the inference. Launch rtabmap_ros with the appropriate launch file in inference mode to predict the regions probabilities, enabling large scale loop closure detection. The commands to use are the same as 1.
 
 ## Testing the prediction accuracy
-To test the accuracy of the network predictions, you should have the training-test images correspondences. If the dataset contains the raw images (e.g., OpenLoris), you can directly create the training-test file by manually aligning the images, as explained in RegionLearner README.md. If the dataset is provided only as bagfiles (e.g., Campus), you need to run rtabmap in exploration mode on the test sequence, in order to acquire the raw images and then create the file as above.
+To test the accuracy of the network predictions, you should have the training-test images correspondences. If the dataset contains the raw images (e.g., OpenLoris), you can directly create the training-test file by manually aligning the images, as explained in RegionLearner README file. If the dataset is provided only as bagfiles (e.g., Campus), you need to run rtabmap in exploration mode on the test sequence, in order to acquire the raw images and then create the file as above.
 Once you have the trained model, the test images and the training-test correspondences file, you can run the test with the command ```python path/to/RegionLearner/src/test.py``` to see the top-N accuracy of the network predictions.
 
 ## Automatic tool for loop detection
@@ -38,7 +38,7 @@ If you want to use it, please read the README.md inside the [LoopClosureInspecto
 
 If you want to use the loop closure inspector tool, you should do:
 1. Set the configurations of LoopClosureInspector in ```LoopClosureInspector/config/config.cfg```. 
-2. Run LoopClosureInspector using the command ```python path/to/LoopClosureInspector/src/loop_inspector.py```. Depending on the configurations, different files will be saved (as explained in the README.md).
+2. Run LoopClosureInspector using the command ```python path/to/LoopClosureInspector/src/loop_inspector.py```. Depending on the configurations, different files will be saved (as explained in the README file).
 4. Set the configurations of the test in ```LoopClosureInspector/config/test.cfg```. 
 5. Run the test using the command ```python path/to/LoopClosureInspector/src/test.py```. An image will be saved where the loop closures are highlighed. 
 

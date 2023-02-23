@@ -63,8 +63,8 @@ def parse_parameters():
         position_annotation = config["visualizer"]["position_annotation"] if "position_annotation" in config["visualizer"] else position_annotation
         circle_dim = int(config["visualizer"]["circle_dim"]) if "circle_dim" in config["visualizer"] else circle_dim 
         annotate_regions = config["visualizer"]["annotate_regions"] == "true" if "annotate_regions" in config["visualizer"] else annotate_regions 
-        x_label = config["visualizer"]["x_label"] == "true" if "x_label" in config["visualizer"] else x_label 
-        y_label = config["visualizer"]["y_label"] == "true" if "y_label" in config["visualizer"] else y_label 
+        x_label = config["visualizer"]["x_label"] if "x_label" in config["visualizer"] else x_label 
+        y_label = config["visualizer"]["y_label"] if "y_label" in config["visualizer"] else y_label 
 
     path_to_dataset = args.path_to_dataset if args.path_to_dataset else path_to_dataset
     images_folder = args.images_folder if args.images_folder else images_folder

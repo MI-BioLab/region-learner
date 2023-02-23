@@ -45,9 +45,30 @@ The modified version of rtabmap can be launched in two different modalities: **e
 It is intended as the exploration phase, in which the robot navigates a new environment, the graph is constructed and clustered and some important files are saved for the training. If rtabmap is launched with the parameter ```--Regions/InferenceMode false```, then it starts in exploration mode. Here, you should specify the parameters:
 - **UseXY**, because the graph clustering algorithm must know which coordinates to use;
 - **ImagesSaveFolder**, to save the images acquired during the exploration, that are necessary for training;
-- **DatasetSaveFile**, to save the dataset. The dataset is a txt file that links the names of the images (or the entire path if **KeepPrefixPath** is true) and the corresponding regions. <br> For example, the content of the dataset file can be <br> 000001.png&emsp;0 <br>000002.png&emsp;0 <br>... <br>000200.png&emsp;5<br>one line for each image acquired;
-- **GraphSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the nodes of the graph constructed by rtabmap with the corresponding regions in a txt file. <br> For example, the content of the graph file can be <br> 0&emsp;0&emsp;0 <br>0.2011&emsp;0.1187&emsp;0 <br>... <br>63.0569&emsp;98.2839&emsp;5<br>one line for each node in the graph;
-- **CentroidsSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the centroids of the clustered graph and the corresponding regions in a txt file. <br> For example, the content of the centroids file can be <br>-1.22641&emsp;23.1104&emsp;0<br>0.227025&emsp;79.8067&emsp;1<br>...<br>69.0922&emsp;217.902&emsp;5<br>one line for each cluster;
+- **DatasetSaveFile**, to save the dataset. The dataset is a txt file that links the names of the images (or the entire path if **KeepPrefixPath** is true) and the corresponding regions. <br> For example, the content of the dataset file can be 
+```
+000001.png  0 
+000002.png  0 
+... 
+000200.png  5
+```
+one line for each image acquired;
+- **GraphSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the nodes of the graph constructed by rtabmap with the corresponding regions in a txt file. <br> For example, the content of the graph file can be 
+```
+0       0       0 
+0.2011  0.1187  0 
+... 
+63.0569 98.2839 5
+```
+one line for each node in the graph;
+- **CentroidsSaveFile**, to save the 2D positions (according to the parameter **UseXY**) of the centroids of the clustered graph and the corresponding regions in a txt file. <br> For example, the content of the centroids file can be 
+```
+-1.22641    23.1104     0
+0.227025    79.8067     1
+...
+69.0922     217.902     5
+```
+one line for each cluster;
 - **RadiusUpperBound**, **DesiredAverageCardinality** and **MeshShapeFactor**, to tune the clustering algorithm;
 - **KeepPrefixPath**, **NameTotalLength**, to define how to save the images names in the dataset file.
 

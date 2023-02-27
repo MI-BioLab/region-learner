@@ -45,7 +45,5 @@ If you want to use the loop closure inspector tool, you should do:
 
 
 # TODO
-- rifare immagini con unità di misura e nomi assi
 - documentare funzioni rtabmap
-- immagini RegionLearner
 - caricare tutti i file e i dataset di interesse in un server dell'uni e scrivere lo script per scaricarli

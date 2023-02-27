@@ -91,12 +91,12 @@ To run the visualizer, the command to use is ```python path/to/RegionLearner/src
 
 Images below show the output of the visualizer when launched with the files saved by rtabmap executed in exploration mode using the sequence 09 of the KITTI odometry dataset.
 
-**Centroids**
-From the centroids file, visualizer creates a plot with 18 centroids.
+**Centroids**<br>
+From the centroids file, visualizer creates a plot with 18 centroids.<br>
 <img src="images/centroids.png" alt="centroids" style="height:300px">
 
-**Regions**
-From the graph file, visualizer creates a plot with each node of the created by rtabmap, where each region is marked with a different color.
+**Regions**<br>
+From the graph file, visualizer creates a plot with each node of the created by rtabmap, where each region is marked with a different color.<br>
 <img src="images/regions.png" alt="graph" style="height:300px">
 
 # Noteworthy things

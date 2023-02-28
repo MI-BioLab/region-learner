@@ -99,8 +99,28 @@ public:
 	void updateAge(int signatureId);
 
 	std::list<int> forget(const std::set<int> & ignoredIds = std::set<int>());
+
+	/**
+	 * Method to transfer signatures from WM to LTM depending on regions probabilites.
+	 * 
+	 * @param maxMemoryAllowed the maximum number or nodes that can be kept in WM.
+	 * @param indices a vector of pairs (region probability, region id).
+	 * @param ignoredIds the set of nodes id that are immunized, so they shouldn't be transfer.
+	 * 
+	 * @return the list of signatures ids forgotten.
+	*/
 	std::list<int> forgetByRegion(int maxMemoryAllowed, const std::vector<std::pair<float, int>> &indices, const std::set<int> & ignoredIds = std::set<int>());
 	std::set<int> reactivateSignatures(const std::list<int> & ids, unsigned int maxLoaded, double & timeDbAccess);
+
+	/**
+	 * Method to retrieve signatures from LTM that belong to the most likely regions.
+	 * 
+	 * @param region_ids the region ids sorted from the most likely region to the less one.
+	 * @param maxLoaded the maximum number of nodes that should be loaded.
+	 * @param timeDbAccess the time employed in this operation.
+	 * 
+	 * @return the set of signatures ids reactivated.
+	*/
 	std::set<int> reactivateSignaturesByRegion(const std::list<int> & region_ids, unsigned int maxLoaded, double & timeDbAccess);
 
 	int cleanup();

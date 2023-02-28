@@ -262,14 +262,77 @@ namespace rtabmap
 	private:
 
 		//pytorch
+
+		/**
+		 * Load the pre-trained deep neural network.
+		*/
 		void loadModel();
+
+		/**
+		 * Convert an OpenCV image to PyTorch tensor.
+		 * 
+		 * @param image the OpenCV image
+		 * 
+		 * @return the corresponding tensor.
+		*/
 		torch::Tensor imageToTensor(const cv::Mat &image);
+
+		/**
+		 * Inference step of the network.
+		 * 
+		 * @param input the image tensor.
+		 * 
+		 * @return an output tensor of regions scores.
+		*/
 		torch::Tensor predict(const torch::Tensor &input);
+
+		/**
+		 * Method to compute the exponential moving average (Pₜ = α ⋅ Oₜ + (1 - α) ⋅ Pₜ₋₁).
+		 * 
+		 * @param output the raw output of the network.
+		 * @param alpha the α of the formula.
+		*/
 		void computeWeightedExponentialMovingAverage(const torch::Tensor &output, float alpha = 0.9);
+
+		/**
+		 * Method to sort the regions probabilities.
+		 * 
+		 * @param indices a vector of pairs (region probability, region id).
+		*/
 		void sortRegionsProbabilities(std::vector<std::pair<float, int>> &indices);
+
+		/**
+		 * Method to save dataset and graph files.
+		 * 
+		 * @param image the image to save for training.
+		 * @param node the node of the clustered graph.
+		 * @param signature the signature of the current node.
+		*/
 		void saveRegionsDatasetAndGraph(const cv::Mat &image, const graph_clustering::Node::SharedPtr &node, const Signature *signature) const;
+
+		/**
+		 * Method to save dataset.
+		 * 
+		 * @param image the image to save for training.
+		 * @param signatureId the signature id.
+		 * @param region the region id.
+		*/
 		void saveRegionsDataset(const cv::Mat &image, unsigned long signatureId, unsigned long region) const;
+
+		/**
+		 * Method to save graph file.
+		 * 
+		 * @param node the node in the clustered graph.
+		*/
 		void saveRegionsGraph(const graph_clustering::Node::SharedPtr &node) const;
+
+		/**
+		 * Utility method to compute the name of the image to save.
+		 * 
+		 * @param name the current name.
+		 * 
+		 * @return the computed name.
+		*/
 		std::string computeImageName(std::string &name) const;
 
 		void optimizeCurrentMap(int id,

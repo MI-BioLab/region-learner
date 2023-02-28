@@ -46,4 +46,3 @@ If you want to use the loop closure inspector tool, you should do:
 
 # TODO
 - documentare funzioni rtabmap
-- immagini RegionLearner

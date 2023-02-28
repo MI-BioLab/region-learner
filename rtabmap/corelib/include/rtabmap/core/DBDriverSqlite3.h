@@ -133,7 +133,14 @@ protected:
 	virtual void loadQuery(VWDictionary * dictionary, bool lastStateOnly = true) const;
 	virtual void loadLastNodesQuery(std::list<Signature *> & signatures) const;
 	virtual void loadSignaturesQuery(const std::list<int> & ids, std::list<Signature *> & signatures) const;
+	/**
+	 * Specialization of the method loadSignaturesByRegion in DBDriver.h
+	*/
 	virtual void loadSignaturesByRegionQuery(const std::list<int> &region_ids, std::list<Signature *> & signatures, int maxLoaded, const Memory &memory) const;
+	
+	/**
+	 * Specialization of the method countRegionsQuery in DBDriver.h
+	*/
 	virtual unsigned long countRegionsQuery() const;
 
 	virtual void loadWordsQuery(const std::set<int> & wordIds, std::list<VisualWord *> & vws) const;

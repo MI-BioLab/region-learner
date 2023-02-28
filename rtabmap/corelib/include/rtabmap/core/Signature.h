@@ -140,7 +140,18 @@ public:
 
 	unsigned long getMemoryUsed(bool withSensorData=true) const; // Return memory usage in Bytes
 
+	/**
+	 * Setter for the region of the signature.
+	 * 
+	 * @param region the region id.
+	*/
 	inline void setRegion(int region) { this->_region = region; }
+
+	/**
+	 * Getter of the signature's region.
+	 * 
+	 * @return the region id.
+	*/
 	inline int getRegion() const { return this->_region; }
 
 private:

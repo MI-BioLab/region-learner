@@ -162,7 +162,22 @@ public:
 	void loadLastNodes(std::list<Signature *> & signatures) const; // returned signatures must be freed after usage
 	Signature * loadSignature(int id, bool * loadedFromTrash = 0); // returned signature must be freed after usage, call loadSignatures() instead if more than one signature should be loaded
 	void loadSignatures(const std::list<int> & ids, std::list<Signature *> & signatures, std::set<int> * loadedFromTrash = 0); // returned signatures must be freed after usage
+	
+	/**
+	 * Method to load signatures from DB sorted by regions probabilities.
+	 * 
+	 * @param region_ids the region ids sorted from the most likely region to the less one.
+	 * @param signatures the signatures retreived.
+	 * @param maxLoaded the maximum number of signatures that should be retrieved.
+	 * @param memory the RTABMap memory (used to check if a signature is not already in WM).
+	*/
 	void loadSignaturesByRegion(const std::list<int> &region_ids, std::list<Signature *> & signatures, int maxLoaded, const Memory &memory) const; // returned signatures must be freed after usage
+	
+	/**
+	 * Method to count the regions already present in the DB.
+	 * 
+	 * @return the number of regions.
+	*/
 	unsigned long countRegions() const;
 
 	void loadWords(const std::set<int> & wordIds, std::list<VisualWord *> & vws); // returned words must be freed after usage
@@ -272,7 +287,15 @@ protected:
 	virtual void loadQuery(VWDictionary * dictionary, bool lastStateOnly = true) const = 0;
 	virtual void loadLastNodesQuery(std::list<Signature *> & signatures) const = 0;
 	virtual void loadSignaturesQuery(const std::list<int> & ids, std::list<Signature *> & signatures) const = 0;
+
+	/**
+	 * Specialization of the method loadSignaturesByRegion.
+	*/
 	virtual void loadSignaturesByRegionQuery(const std::list<int> &region_ids, std::list<Signature *> & signatures, int maxLoaded, const Memory &memory) const = 0;
+	
+	/**
+	 * Specialization of the method countRegionsQuery.
+	*/
 	virtual unsigned long countRegionsQuery() const = 0;
 	
 	virtual void loadWordsQuery(const std::set<int> & wordIds, std::list<VisualWord *> & vws) const = 0;

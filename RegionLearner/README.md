@@ -13,6 +13,8 @@ This package is realized using python and PyTorch. We recommend to install conda
 Inside the configuration file ```RegionLearner/config/config.cfg``` a lot of parameters can be specified in order to customize the algorithm.
 The parameters logic works as follows: each parameter has a default value defined in the source files (where it is used). You can specify a different value either by using the configuration file or by passing arguments to the console when launching python files. Console arguments have the maximum "priority", followed by the configuration file and the default value at the end. This means that console arguments overwrite both the configuration file and the default value, while configuration file overwrites the default value.
 
+You can specify a different configuration file by passing the argument ```--config-path path/to/config.cfg``` to console.
+
 Now take a look at the configuration file. It is divided into four sections, according to the cfg sintax: **dataset**, **nn**, **test** and **visualizer**.
 
 ## Dataset
@@ -45,6 +47,8 @@ The parameters for the neural network are specified in this section. Most of the
 
 Our experiments were conducted without data augmentation.
 
+To launch the training, the command to use is ```python path/to/RegionLearner/src/train.py```.
+
 ## Test
 The parameters for the test are defined here. The test is intended as the test on the network predictions (top-N accuracy), not as the test on the loop closure detection (which can only be performed using rtabmap). Parameters are: 
 - *test_on_training_set* defines whether to test the algorithm on the training set, using the parameters specified in section *dataset*. This is for those datasets (e.g. KITTI) for which a test set does not exist. Default value is false.
@@ -71,6 +75,8 @@ Parameter *path_to_test_images* was voluntarily written separately to the test p
 
 **Attention**: the slash at the end of the path is necessary.
 
+To run the test, the command to use is ```python path/to/RegionLearner/src/test.py```.
+
 ## Visualizer 
 The parameters for the visualizer are specified in this section. The parameters are:
 - *position_color*, *position_dim* and *position_annotation*  allow to specificy how to draw the circle that represents the robot position on the map. The last one (*position_annotation*) is the annotation to write along the circle.
@@ -81,6 +87,18 @@ The parameters for the visualizer are specified in this section. The parameters 
 
 If you desire to visualize the graph and the centroids of the test sequence, you need to put them inside the *path_to_test* folder and edit *path_to_dataset* in the **dataset** section.
 
+To run the visualizer, the command to use is ```python path/to/RegionLearner/src/visualizer.py```.
+
+Images below show the output of the visualizer when launched with the files saved by rtabmap executed in exploration mode using the sequence 09 of the KITTI odometry dataset.
+
+**Centroids**<br>
+From the centroids file, visualizer creates a plot with 18 centroids.<br>
+<img src="images/centroids.png" alt="centroids" style="height:300px">
+
+**Regions**<br>
+From the graph file, visualizer creates a plot with each node of the created by rtabmap, where each region is marked with a different color.<br>
+<img src="images/regions.png" alt="graph" style="height:300px">
+
 # Noteworthy things
 Noteworthy things are describer below, to provide a better understanding of some important features.
 
@@ -88,7 +106,7 @@ Noteworthy things are describer below, to provide a better understanding of some
 Epochs and learning rate can be specified as parameters. The learning rate decay policy works as follow: the specified learning rate is the initial learning rate. If after 5 epochs the value returned by the loss function does not decrease, the learning rate is divided by a factor of 3. This continues until the learning rate reaches the minimum of $10^{-5}$, when the training stops. On the other side, if the number of epochs exceed that defined in the parameter, training is stopped. In our experiments we used $10^{-3}$ as initial learning rate and 100 as maximum epochs, but training always stopped before 100 epochs because of the decrease in the learning rate.
 
 ## Train-test correspondences files
-Inside the *path_to_test* folder, you should have a training-test correspondences file (*train_correspondences_file*). It correlates the images between the training set and the test. Below an example of the content of the file is shown:
+Inside the *path_to_test* folder, you should have a training-test correspondences file (*train_correspondences_file* parameter). It correlates the images between the training set and the test. Below an example of the content of the file is shown:
 
 ```
 000001.png	0	000001.png	000037.png

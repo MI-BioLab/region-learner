@@ -88,6 +88,7 @@ Code changes were made in the following files (both header and cpp):
 - *Signature*, where methods ```setRegion``` and ```getRegion``` were added;
 - *DBDriver*, where the methods ```countRegions``` and ```loadSignaturesByRegion``` were added to load information from the DB, and methods ```countRegionsQuery``` and ```loadSignaturesByRegionQuery``` to specialize them inside *DBDriverSqlite3*.
 
+All this functions are documented in the corresponding header file.
 
 To store the regions inside the database, the column ```region_id``` has been added to table ```Node``` in the database schemas in the ```rtabmap/corelib/src/resources``` (also in those contained in ```rtabmap/corelib/src/resources/backward_compatibility```).
 

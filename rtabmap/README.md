@@ -31,7 +31,7 @@ Several changes have been made w.r.t the original rtabmap package. They are desc
  - **DesiredAverageCardinality** (*int*), the desired average cardinality for a region (default to 100);
  - **MeshShapeFactor** (*float*), the mesh shape factor to tune clustering (default to 50);
  - **KeepPrefixPath** (*bool*), whether the entire path or just the name should be kept when saving the images for the dataset (default to false);
- - **NameTotalLength** (*int*), the total name length for the images. 0s are used to fill the name (i.e. the name of the images saved are 000001, 000002...) (default to 6). 
+ - **NameTotalLength** (*int*), the total name length for the images. 0s are used to fill the name (e.g., the name of the images saved are 000001, 000002...) (default to 6). 
  
 \* Parameters not used in the experiments and intended for future works.
 

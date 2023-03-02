@@ -1,10 +1,10 @@
 # Region Prediction for Efficient Robot Localization on Large Maps
 
-Official repository of the paper **Region Prediction for Efficient Robot Localization on Large Maps** (available here [?]).
+Official repository of the paper **Region Prediction for Efficient Robot Localization on Large Maps** (available [here](https://arxiv.org/abs/2303.00295)).
 
-The paper has been submitted to [IROS 2023](https://ieee-iros.org/). <with the following clearifier video.>
+The paper has been submitted to [IROS 2023](https://ieee-iros.org/) with the following clearifier video.
 
-<!--- https://user-images.githubusercontent.com/41426942/220202864-8da8bff3-fd33-4902-8a96-14e2577a1376.mp4 -->
+https://user-images.githubusercontent.com/41426942/220202864-8da8bff3-fd33-4902-8a96-14e2577a1376.mp4
 
 The idea is explained in detail in the paper, therefore the focus below will be on how to install everything to easily reproduce experiments (or perform new ones). 
 

@@ -6,6 +6,8 @@ The paper has been submitted to [IROS 2023](https://ieee-iros.org/) with the fol
 
 https://user-images.githubusercontent.com/41426942/220202864-8da8bff3-fd33-4902-8a96-14e2577a1376.mp4
 
+
+
 The idea is explained in detail in the paper, therefore the focus below will be on how to install everything to easily reproduce experiments (or perform new ones). 
 
 Requirements and details for each part are outlined in the README files in the corresponding directory. 

@@ -48,4 +48,4 @@ If you want to use the loop closure inspector tool, you should do:
 
 
 # TODO
-- caricare materiale
+- load the material for the experiments

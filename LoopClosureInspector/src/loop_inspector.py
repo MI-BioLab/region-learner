@@ -103,23 +103,36 @@ if __name__ == '__main__':
     
     #euclidean distance to find the nn in a radius
     grid_translation = gsp.GriSPy(merged_translations, N_cells=32, metric='euclid')
+    """ near_translation_dist, near_translation_ind = grid_translation.nearest_neighbors(merged_translations, 
+                                                                                    n=2) """
     near_translation_dist, near_translation_ind = grid_translation.shell_neighbors(merged_translations, 
                                                                                     distance_lower_bound=distance_lower_bound, 
-                                                                                    distance_upper_bound=distance_upper_bound)
+                                                                                    distance_upper_bound=distance_upper_bound) 
+    
+    #print(near_translation_dist)
+    #print(near_translation_ind)
+    
+    #print(near_translation_dist.shape)
+    
     
 
     #for the nn found, a check on the temporal distance and the angle in done, to discard false loop closures
     good_pairs = []
     for i, idx in enumerate(near_translation_ind):
         if len(idx) > 1:
-            for other in idx:
-                if angular_distance_1D(merged_angles[i], [merged_angles[other]], None) < max_angular_difference:
-                    if angle_seq[i] == angle_seq[other]:
-                        if abs(other - i) > n_frame_since_last:
-                            good_pairs.append((i, other))
+            near_translation_dist_sorted_idx = np.argsort(near_translation_dist[i])
+            print(idx)
+            print(near_translation_dist_sorted_idx)
+            for other in near_translation_dist_sorted_idx:
+                if angular_distance_1D(merged_angles[i], [merged_angles[idx[other]]], None) < max_angular_difference:
+                    if angle_seq[i] == angle_seq[idx[other]]:
+                        if abs(idx[other] - i) > n_frame_since_last:
+                            good_pairs.append((i, idx[other]))
+                            break
                     else:
-                        good_pairs.append((i, other))               
-
+                        good_pairs.append((i, idx[other])) 
+                        break              
+    
     print("Found " + str(len(good_pairs)) + " correspondences!")
 
     write(cfg["settings"]["output"], good_pairs, len(poses), save_pairs, save_matrix)
